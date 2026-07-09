@@ -134,7 +134,8 @@ export function CatalogoPage() {
 
               {/* dorso: la ficha tecnica */}
               <div className="deck-cara deck-dorso surface-card absolute inset-0 border border-primary/50 p-5">
-                <h3 className="font-heading text-sm font-bold uppercase tracking-widest text-primary">Ficha tecnica</h3>
+                {/* accent, no primary: el violeta da 3.4:1 sobre la tarjeta y no sirve como texto */}
+                <h3 className="font-heading text-sm font-bold uppercase tracking-widest text-accent">Ficha tecnica</h3>
                 <p className="mb-3 text-[10px] text-muted">
                   {tope.marca} {tope.modelo} {tope.version}
                 </p>

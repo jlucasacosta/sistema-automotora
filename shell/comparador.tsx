@@ -54,7 +54,9 @@ const FILAS: Fila[] = [
     delta: (v, m) => (v === m ? "" : `+${(v - m).toLocaleString("es-AR")} km`),
   },
   { key: "cuota", label: "Cuota estimada (48m)", valor: (u) => u.cuota, texto: (u) => ars(u.cuota), mejor: "min" },
-  { key: "diasPlaya", label: "Dias en stock", valor: (u) => u.diasPlaya, texto: (u) => `${u.diasPlaya} d`, mejor: "max" },
+  // Dias en stock NO puntua: mas dias no es una virtud de la unidad, es plata quieta
+  // del lado de la concesionaria. Se muestra como contexto de negociacion, sin ganador.
+  { key: "diasPlaya", label: "Dias en stock", valor: () => null, texto: (u) => `${u.diasPlaya} d`, mejor: null },
   { key: "motor", label: "Motor", valor: () => null, texto: (u) => u.motor, mejor: null },
   { key: "caja", label: "Caja", valor: () => null, texto: (u) => u.caja, mejor: null },
 ]

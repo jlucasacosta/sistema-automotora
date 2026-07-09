@@ -32,7 +32,7 @@ export function DashboardPage() {
       <div className="grid gap-3 lg:grid-cols-4">
         {/* 1x1 — la cifra que se lee de reojo */}
         <div className="surface-card flex flex-col justify-between p-4">
-          <p className="text-[10px] uppercase tracking-widest text-muted">Valor del embudo</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted">Valor del pipeline</p>
           <p className="precio text-4xl leading-none text-fg">
             {resumen ? usd(resumen.valorEmbudo) : "—"}
           </p>

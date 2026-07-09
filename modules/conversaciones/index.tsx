@@ -45,7 +45,7 @@ export function ConversacionesPage() {
                     <p className="truncate font-heading text-xs font-semibold">{h.cliente}</p>
                     <span className="dato shrink-0 text-[10px] text-muted">{h.hora}</span>
                   </div>
-                  <p className="truncate text-[10px] text-primary">{h.unidad}</p>
+                  <p className="truncate text-[10px] text-accent">{h.unidad}</p>
                   <div className="mt-0.5 flex items-center justify-between gap-2">
                     <p className="truncate text-[11px] text-muted">{h.ultimo}</p>
                     {h.sinLeer > 0 && (

@@ -7,7 +7,7 @@ Un sistema de gestión para concesionarias: el embudo de venta donde el ancho de
 ---
 
 ## Demo en vivo
-👉 (pendiente de deploy)
+👉 https://sistema-automotora-demo.vercel.app
 
 ## Sumate a la comunidad (gratis)
 

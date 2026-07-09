@@ -42,7 +42,7 @@ Lo que se rompe si el dato llega tarde: la **unidad vendida dos veces** (dos ven
 ## Módulos → arquetipo
 | Módulo | Arquetipo | Qué es |
 |---|---|---|
-| **dashboard** | `mosaico-mando` (NUEVO) | bento de spans heterogéneos de verdad: cifra del embudo (1×1) · **panel-odómetro** (3×1) · **scatter precio×km** (3×2) · playa por antigüedad (1×2). No es una grilla 4-up uniforme |
+| **dashboard** | `mosaico-mando` (NUEVO) | bento de spans heterogéneos de verdad: cifra del pipeline (1×1) · **panel-odómetro** (3×1) · **scatter precio×km** (3×2) · playa por antigüedad (1×2). No es una grilla 4-up uniforme |
 | **pipeline** ⭐ | `embudo-lanes-conversion` (NUEVO) | embudo horizontal: cada etapa es un trapecio que se angosta. **El ancho del trapecio ES el dato** (cantidad de fichas). Mover una ficha re-escala los anchos y recomputa el % de conversión. Eso es lo que un kanban no hace: en el kanban todas las columnas miden lo mismo |
 | **catalogo** | `ficha-flip-deck` (NUEVO) | mazo apilado, no grilla. Una carta al tope, grande. Click en el riel → esa unidad **se reparte** al tope; click en la carta → flip 3D y aparece la ficha técnica en el dorso |
 | **ventas** | `boleto-slips` | cada venta es un boleto: comprador, unidad, patente, forma de pago, seña/saldo, comisión |

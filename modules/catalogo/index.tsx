@@ -60,9 +60,9 @@ export function CatalogoPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Playa</h1>
+        <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Catalogo</h1>
         <p className="text-[11px] text-muted">
-          Elegi una unidad del riel para repartirla al tope. Hace click en la carta para ver la ficha tecnica.
+          Elegi una unidad de la lista para verla en detalle. Hace click en la ficha para ver los datos tecnicos.
         </p>
       </div>
 
@@ -118,7 +118,7 @@ export function CatalogoPage() {
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     <span className="chip bg-subtle text-muted">{tope.anio}</span>
                     <span className="chip bg-subtle text-muted">{fmtKm(tope.km)}</span>
-                    <span className={"chip " + chipAging[nivelDeAging(tope.diasPlaya)]}>{tope.diasPlaya} d en playa</span>
+                    <span className={"chip " + chipAging[nivelDeAging(tope.diasPlaya)]}>{tope.diasPlaya} d en stock</span>
                     {tope.km > 0 && (
                       <span className={"chip " + chipBanda[nivelDeBanda(desvio)]}>
                         {desvio >= 0 ? "+" : ""}
@@ -127,7 +127,7 @@ export function CatalogoPage() {
                     )}
                   </div>
                   <p className="mt-3 flex items-center gap-1 text-[10px] uppercase tracking-widest text-muted">
-                    <RotateCcw size={11} strokeWidth={2.5} /> click para la ficha tecnica
+                    <RotateCcw size={11} strokeWidth={2.5} /> ver datos tecnicos
                   </p>
                 </div>
               </div>
@@ -145,7 +145,7 @@ export function CatalogoPage() {
                 <Spec icon={Palette} label="Color" valor={tope.color} />
                 <Spec icon={Cog} label="Segmento" valor={tope.segmento} />
                 <p className="mt-4 text-[10px] uppercase tracking-widest text-muted">
-                  <RotateCcw size={11} strokeWidth={2.5} className="mr-1 inline" /> click para volver
+                  <RotateCcw size={11} strokeWidth={2.5} className="mr-1 inline" /> volver
                 </p>
               </div>
             </button>
@@ -154,7 +154,7 @@ export function CatalogoPage() {
           {/* EL RIEL: el resto del mazo, esperando que lo repartan */}
           <div className="surface-card p-3">
             <h3 className="mb-2 font-heading text-[11px] font-bold uppercase tracking-widest text-muted">
-              Mazo · {visibles.length} unidades
+              Unidades · {visibles.length}
             </h3>
             <ul className="grid max-h-[19rem] gap-1.5 overflow-y-auto pr-1 sm:grid-cols-2">
               {visibles.map((u) => {

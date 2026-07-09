@@ -152,14 +152,14 @@ export function PipelinePage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Embudo</h1>
+          <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Pipeline</h1>
           <p className="text-[11px] text-muted">
             El ancho de cada etapa es la cantidad de oportunidades. Arrastra una ficha para avanzarla.
           </p>
         </div>
         <div className="flex gap-6">
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-muted">Valor del embudo</p>
+            <p className="text-[10px] uppercase tracking-widest text-muted">Valor del pipeline</p>
             <p className="precio text-xl text-fg">{usd(valorEmbudo)}</p>
           </div>
           <div>
@@ -219,7 +219,7 @@ export function PipelinePage() {
                     />
                   ))}
                   {!items.length && (
-                    <li className="py-6 text-center text-[9px] uppercase tracking-widest text-muted">vacia</li>
+                    <li className="py-6 text-center text-[9px] uppercase tracking-widest text-muted">sin oportunidades</li>
                   )}
                 </ul>
               </div>
@@ -233,7 +233,7 @@ export function PipelinePage() {
         <section className="space-y-2">
           <h2 className="flex items-center gap-2 font-heading text-sm font-bold uppercase tracking-widest">
             <ArrowLeftRight size={15} strokeWidth={2.5} className="text-primary" />
-            Comparador · candidatas para {dealSel.cliente}
+            Comparador de unidades · {dealSel.cliente}
           </h2>
           <Comparador key={dealSel.id} unidades={candidatas} />
         </section>

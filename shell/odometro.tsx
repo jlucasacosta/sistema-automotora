@@ -17,20 +17,21 @@ export type Dial = {
   invertido?: boolean
 }
 
-const R = 48
+const R = 48 // radio de la pista
+const R_REDLINE = 56 // la zona roja va POR FUERA de la pista, como el redline pintado de un tacometro
 const CX = 60
 const CY = 60
 
 // frac 0 = extremo izquierdo del arco, frac 1 = extremo derecho.
-function punto(frac: number) {
+function punto(frac: number, radio: number) {
   const t = Math.PI - frac * Math.PI
-  return { x: CX + R * Math.cos(t), y: CY - R * Math.sin(t) }
+  return { x: CX + radio * Math.cos(t), y: CY - radio * Math.sin(t) }
 }
 
-function arco(desde: number, hasta: number) {
-  const a = punto(desde)
-  const b = punto(hasta)
-  return `M ${a.x.toFixed(2)} ${a.y.toFixed(2)} A ${R} ${R} 0 0 1 ${b.x.toFixed(2)} ${b.y.toFixed(2)}`
+function arco(desde: number, hasta: number, radio: number = R) {
+  const a = punto(desde, radio)
+  const b = punto(hasta, radio)
+  return `M ${a.x.toFixed(2)} ${a.y.toFixed(2)} A ${radio} ${radio} 0 0 1 ${b.x.toFixed(2)} ${b.y.toFixed(2)}`
 }
 
 // Tailwind no ve clases armadas por concatenacion: mapa literal.
@@ -49,15 +50,18 @@ export function Odometro({ d }: { d: Dial }) {
   const enRedline = d.invertido ? frac <= fracRedline : frac >= fracRedline
   const estado = enRedline ? "redline" : "normal"
   const grados = (frac - 0.5) * 180
-  const zonaRoja = d.invertido ? arco(0, Math.max(fracRedline, 0.001)) : arco(fracRedline, 1)
+  // La zona roja se dibuja en su propio radio, fuera de la pista: si viviera sobre la
+  // pista, el arco de valor la taparia cuando la aguja la cruza. Eso pasaba en los
+  // diales `invertido` (zona roja abajo), donde el valor arranca justo encima de ella.
+  const zonaRoja = d.invertido
+    ? arco(0, Math.max(fracRedline, 0.001), R_REDLINE)
+    : arco(fracRedline, 1, R_REDLINE)
 
   return (
     <div className="flex flex-col items-center">
       <svg viewBox="0 0 120 70" className="w-full max-w-[9rem]">
         {/* pista */}
         <path d={arco(0, 1)} className="stroke-border" strokeWidth={7} fill="none" strokeLinecap="round" />
-        {/* zona redline: donde deja de ser un ritmo y pasa a ser un problema */}
-        <path d={zonaRoja} className="stroke-danger/35" strokeWidth={7} fill="none" strokeLinecap="round" />
         {/* recorrido real */}
         <path
           d={arco(0, Math.max(frac, 0.001))}
@@ -66,6 +70,9 @@ export function Odometro({ d }: { d: Dial }) {
           fill="none"
           strokeLinecap="round"
         />
+        {/* zona redline: donde deja de ser un ritmo y pasa a ser un problema.
+            Va afuera y ultima, asi ningun arco de valor puede taparla. */}
+        <path d={zonaRoja} className="stroke-danger/80" strokeWidth={3.5} fill="none" strokeLinecap="round" />
         {/* la aguja: esto es lo que lo hace un tablero y no un anillo */}
         <g className="aguja" style={{ transform: `rotate(${grados}deg)`, transformOrigin: `${CX}px ${CY}px` }}>
           <line x1={CX} y1={CY} x2={CX} y2={CY - R + 6} className="stroke-fg" strokeWidth={2} strokeLinecap="round" />

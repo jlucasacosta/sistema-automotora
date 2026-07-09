@@ -34,9 +34,9 @@ export function ContactosPage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Leads</h1>
+          <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Contactos</h1>
           <p className="text-[11px] text-muted">
-            {leads.length} contactos · <span className="text-danger">{frios} enfriandose</span>
+            {leads.length} contactos · <span className="text-danger">{frios} sin contacto reciente</span>
           </p>
         </div>
         <input
@@ -56,7 +56,7 @@ export function ContactosPage() {
               <th className="px-3 py-2 font-medium">Canal</th>
               <th className="px-3 py-2 font-medium">Interes</th>
               <th className="px-3 py-2 text-right font-medium">Presupuesto</th>
-              <th className="px-3 py-2 font-medium">Temperatura</th>
+              <th className="px-3 py-2 font-medium">Ultimo contacto</th>
               <th className="px-3 py-2 font-medium">Vendedor</th>
             </tr>
           </thead>

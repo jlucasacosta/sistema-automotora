@@ -27,7 +27,7 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-3">
-      <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Tablero</h1>
+      <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Panel general</h1>
 
       <div className="grid gap-3 lg:grid-cols-4">
         {/* 1x1 — la cifra que se lee de reojo */}
@@ -60,7 +60,7 @@ export function DashboardPage() {
         {/* 3x1 — el panel de odometros: aguja + redline, no anillos */}
         <div className="surface-card p-4 lg:col-span-3">
           <h2 className="mb-2 font-heading text-[11px] font-bold uppercase tracking-widest text-muted">
-            Tablero de la concesionaria
+            Indicadores del mes
           </h2>
           {diales.length ? <PanelOdometro diales={diales} /> : <div className="h-32 animate-pulse rounded bg-subtle" />}
         </div>
@@ -69,10 +69,10 @@ export function DashboardPage() {
         <div className="surface-card p-4 lg:col-span-3 lg:row-span-2">
           <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="font-heading text-[11px] font-bold uppercase tracking-widest text-muted">
-              Corredor de precio · usados en playa
+              Precio contra kilometraje · unidades usadas
             </h2>
             <p className="text-[10px] text-muted">
-              tamaño del punto = dias en playa · arriba de la banda = sobrevaluado
+              tamaño del punto = dias en stock · sobre la banda = precio por encima de la referencia
             </p>
           </div>
           {usados.length ? (
@@ -90,13 +90,13 @@ export function DashboardPage() {
           )}
           <div className="mt-2 flex flex-wrap gap-3 text-[10px] text-muted">
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-danger" /> sobrevaluada
+              <span className="h-2 w-2 rounded-full bg-danger" /> por encima de la referencia
             </span>
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-primary" /> en corredor
+              <span className="h-2 w-2 rounded-full bg-primary" /> dentro de la referencia
             </span>
             <span className="flex items-center gap-1">
-              <span className="h-2 w-2 rounded-full bg-success" /> oportunidad
+              <span className="h-2 w-2 rounded-full bg-success" /> por debajo de la referencia
             </span>
           </div>
         </div>
@@ -104,7 +104,7 @@ export function DashboardPage() {
         {/* 1x2 — la playa por antiguedad: plata quieta */}
         <div className="surface-card p-4 lg:row-span-2">
           <h2 className="mb-2 font-heading text-[11px] font-bold uppercase tracking-widest text-muted">
-            Plata quieta
+            Unidades con mayor antiguedad
           </h2>
           <ul className="max-h-[26rem] space-y-2 overflow-y-auto pr-1">
             {playa.map((u) => (

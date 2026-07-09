@@ -54,7 +54,7 @@ const FILAS: Fila[] = [
     delta: (v, m) => (v === m ? "" : `+${(v - m).toLocaleString("es-AR")} km`),
   },
   { key: "cuota", label: "Cuota estimada (48m)", valor: (u) => u.cuota, texto: (u) => ars(u.cuota), mejor: "min" },
-  { key: "diasPlaya", label: "Dias en playa", valor: (u) => u.diasPlaya, texto: (u) => `${u.diasPlaya} d`, mejor: "max" },
+  { key: "diasPlaya", label: "Dias en stock", valor: (u) => u.diasPlaya, texto: (u) => `${u.diasPlaya} d`, mejor: "max" },
   { key: "motor", label: "Motor", valor: () => null, texto: (u) => u.motor, mejor: null },
   { key: "caja", label: "Caja", valor: () => null, texto: (u) => u.caja, mejor: null },
 ]
@@ -119,7 +119,7 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
     <div className="grid gap-3 lg:grid-cols-[16rem_1fr]">
       {/* Mazo de candidatas: se arrastran a los slots */}
       <div className="surface-card flex flex-col p-3">
-        <h3 className="font-heading text-[11px] font-bold uppercase tracking-widest text-muted">Candidatas del lead</h3>
+        <h3 className="font-heading text-[11px] font-bold uppercase tracking-widest text-muted">Unidades para comparar</h3>
         <p className="mb-2 mt-1 text-[10px] leading-snug text-muted">Arrastra hasta 3 unidades a la bandeja.</p>
         <ul className="max-h-[19rem] space-y-1.5 overflow-y-auto pr-1">
           {disponibles.map((u) => (
@@ -140,7 +140,7 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
               </p>
             </li>
           ))}
-          {!disponibles.length && <li className="py-6 text-center text-[10px] text-muted">Sin candidatas libres</li>}
+          {!disponibles.length && <li className="py-6 text-center text-[10px] text-muted">Sin unidades disponibles</li>}
         </ul>
       </div>
 

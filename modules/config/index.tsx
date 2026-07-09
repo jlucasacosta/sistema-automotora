@@ -42,7 +42,7 @@ export function ConfigPage() {
         </Seccion>
 
         <Seccion
-          titulo="Dominio: la playa y el embudo"
+          titulo="Dominio: stock y pipeline"
           nota="Estos numeros viven en shell/theme.ts. Cambialos y muta todo el sistema: ningun componente tiene un umbral escrito a mano."
         >
           <Fila label="Unidad fresca hasta" value={`${theme.aging.fresco} dias`} />

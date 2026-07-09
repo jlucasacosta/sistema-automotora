@@ -75,7 +75,7 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
             strokeWidth={1}
             opacity={0.9}
           >
-            <title>{`${p.etiqueta} · ${usd(p.precio)} · ${p.km.toLocaleString("es-AR")} km · ${p.diasPlaya} dias en playa · ${desvio >= 0 ? "+" : ""}${desvio.toFixed(1)}% vs referencia`}</title>
+            <title>{`${p.etiqueta} · ${usd(p.precio)} · ${p.km.toLocaleString("es-AR")} km · ${p.diasPlaya} dias en stock · ${desvio >= 0 ? "+" : ""}${desvio.toFixed(1)}% vs referencia`}</title>
           </circle>
         )
       })}

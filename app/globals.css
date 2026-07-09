@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Fallbacks en triplete "R G B". El layout inyecta los valores reales del theme (VERTICE). */
+  --primary: 123 97 255;
+  --accent: 255 77 157;
+  --bg: 20 18 28;
+  --surface: 30 27 41;
+  --fg: 237 235 245;
+  --muted: 155 150 173;
+  --border: 48 44 64;
+  --subtle: 37 33 48;
+  --success: 52 211 153;
+  --warning: 251 191 36;
+  --danger: 251 92 76;
+  --info: 56 189 248;
+  --radius: 10px;
+  --pad: 12px;
+  --badge-radius: 9999px;
+  --card-border: 0 solid transparent;
+  --font-heading: system-ui, sans-serif;
+  --font-body: system-ui, sans-serif;
+
+  --shadow-sm: none;
+  --shadow-card: none;
+  --shadow-pop: none;
+}
+
+/* La scrollbar es parte del diseño, no un accidente del navegador. */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--border)) transparent;
+  }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--border));
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--primary) / 0.7);
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-corner { background: transparent; }
+}
+
+@layer components {
+  /* elevation: flat -> la separacion la hacen la regla de 1px y el color. Editorial, no vidrio. */
+  .surface-card {
+    background: rgb(var(--surface));
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    border: var(--card-border);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: var(--badge-radius);
+    padding: 0.125rem 0.5rem;
+    font-size: 0.68rem;
+    line-height: 1.05rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  /* Todo lo que es DATO va en tabular: precios, km, cuotas, dias. */
+  .dato {
+    font-variant-numeric: tabular-nums;
+  }
+  /* La patente argentina AB 123 CD: stencil de chapa. Es el test de un segundo. */
+  .patente {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    font-variant-numeric: tabular-nums;
+  }
+  /* El precio en USD es lo otro que grita "concesionaria". */
+  .precio {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  /* La carta del mazo: el flip 3D necesita perspectiva en el padre. */
+  .deck-perspectiva { perspective: 1600px; }
+  .deck-carta {
+    transform-style: preserve-3d;
+    transition: transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .deck-carta.dada-vuelta { transform: rotateY(180deg); }
+  .deck-cara {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .deck-dorso { transform: rotateY(180deg); }
+}
+
+/* El trapecio del embudo se angosta: el ancho ES el dato. Cuando cambia, se desliza. */
+.lane {
+  transition: flex-grow 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* La ficha entra a la etapa siguiente empujada desde la izquierda. */
+@keyframes avanzar {
+  from { transform: translateX(-24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.avanzando { animation: avanzar 420ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* La seña vencida late en escarlata. Es el frame que se graba. */
+@keyframes latir-sena {
+  0%, 100% { border-left-width: 3px; }
+  50% { border-left-width: 7px; }
+}
+.sena-vencida { animation: latir-sena 1.25s ease-in-out infinite; }
+
+/* La carta se reparte del mazo al tope. */
+@keyframes repartir {
+  from { transform: translateY(18px) scale(0.96); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.repartida { animation: repartir 380ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* La aguja del odometro barre desde cero al montar. */
+@keyframes barrido {
+  from { transform: rotate(-90deg); }
+}
+.aguja { animation: barrido 900ms cubic-bezier(0.34, 1.3, 0.64, 1); transform-origin: center; }
+
+/* El slot del comparador hace snap con rebote, y la celda ganadora flashea. */
+@keyframes snap {
+  0% { transform: scale(0.9); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.snap { animation: snap 340ms cubic-bezier(0.34, 1.4, 0.64, 1); }
+
+@keyframes flash-ganadora {
+  0%, 100% { background-color: rgb(var(--success) / 0.12); }
+  40% { background-color: rgb(var(--success) / 0.34); }
+}
+.ganadora-flash { animation: flash-ganadora 900ms ease-out; }
+
+/* El ribbon "MEJOR VALOR" baja sobre la columna ganadora. */
+@keyframes bajar-ribbon {
+  from { transform: translateY(-14px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.ribbon { animation: bajar-ribbon 420ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .lane, .deck-carta { transition: none; }
+  .avanzando, .sena-vencida, .repartida, .aguja, .snap, .ganadora-flash, .ribbon { animation: none; }
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body { font-family: var(--font-body); }
+h1, h2, h3 { font-family: var(--font-heading); letter-spacing: -0.01em; }

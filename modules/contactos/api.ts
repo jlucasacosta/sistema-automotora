@@ -1,0 +1,56 @@
+// PATRON MOCK. Misma firma que la query real. Ver BACKEND.md.
+// Personas, telefonos y mails 100% ficticios. Los patrones de mail estan mezclados a
+// proposito (nombre.apellido, inicial+apellido, apodo, guion bajo, con numero, sin
+// separador) y ninguno pasa el 30%: un listado uniforme grita "generado".
+
+export type Canal = "showroom" | "portal" | "web" | "whatsapp" | "referido" | "telefono"
+
+export type Lead = {
+  id: string
+  nombre: string
+  email: string
+  telefono: string
+  canal: Canal
+  interes: string
+  presupuesto: number // USD
+  diasSinContacto: number
+  vendedor: string
+}
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+const LEADS: Lead[] = [
+  { id: "L-01", nombre: "Camila Duarte", email: "camila.duarte@gmail.com", telefono: "+54 9 11 4783-2610", canal: "portal", interes: "KERO Sable 2.0", presupuesto: 40000, diasSinContacto: 1, vendedor: "Milena Sarti" },
+  { id: "L-02", nombre: "Tomas Escalante", email: "tomiescalante88@gmail.com", telefono: "+54 9 351 662-4188", canal: "web", interes: "ZEFIR Cobre E", presupuesto: 38000, diasSinContacto: 2, vendedor: "Facundo Ibarra" },
+  { id: "L-03", nombre: "Ariadna Pesce", email: "ari_pesce23@hotmail.com", telefono: "+54 9 341 508-9372", canal: "whatsapp", interes: "OSMA Tilo Plus", presupuesto: 23000, diasSinContacto: 9, vendedor: "Milena Sarti" },
+  { id: "L-04", nombre: "Bruno Lattanzio", email: "brunolattanzio@gmail.com", telefono: "+54 9 261 447-0523", canal: "showroom", interes: "KERO Sable Cross 0km", presupuesto: 42000, diasSinContacto: 0, vendedor: "Renata Villalba" },
+  { id: "L-05", nombre: "Mora Cantero", email: "moracantero@gmail.com", telefono: "+54 9 11 5296-7431", canal: "portal", interes: "VANTEL Brio 1.8", presupuesto: 14000, diasSinContacto: 4, vendedor: "Facundo Ibarra" },
+  { id: "L-06", nombre: "Joaquin Bentancor", email: "jbentancor@outlook.com", telefono: "+54 9 341 273-6605", canal: "referido", interes: "NORVIK Talud Limited", presupuesto: 35000, diasSinContacto: 1, vendedor: "Bruno Lattanzio" },
+  { id: "L-07", nombre: "Renata Villalba", email: "villalba.renata@hotmail.com", telefono: "+54 9 11 6034-8917", canal: "web", interes: "KERO Duma 1.5T", presupuesto: 33000, diasSinContacto: 3, vendedor: "Milena Sarti" },
+  { id: "L-08", nombre: "Ignacio Zabaleta", email: "izabaleta@yahoo.com", telefono: "+54 9 351 819-2264", canal: "telefono", interes: "TESSARI Ferro 1.6", presupuesto: 26000, diasSinContacto: 11, vendedor: "Renata Villalba" },
+  { id: "L-09", nombre: "Delfina Grispo", email: "delfi.grispo@gmail.com", telefono: "+54 9 261 730-5548", canal: "whatsapp", interes: "MARLO Randa 1.6", presupuesto: 31000, diasSinContacto: 2, vendedor: "Facundo Ibarra" },
+  { id: "L-10", nombre: "Santiago Roldan", email: "santiroldan@outlook.com", telefono: "+54 9 11 3928-4470", canal: "showroom", interes: "VANTEL Brio Sport", presupuesto: 37000, diasSinContacto: 0, vendedor: "Bruno Lattanzio" },
+  { id: "L-11", nombre: "Gaston Uriburu", email: "guriburu@hotmail.com", telefono: "+54 9 351 204-7736", canal: "portal", interes: "TESSARI Lume Sport", presupuesto: 34000, diasSinContacto: 8, vendedor: "Renata Villalba" },
+  { id: "L-12", nombre: "Valentina Ocampo", email: "valentina.ocampo@gmail.com", telefono: "+54 9 11 4471-8052", canal: "web", interes: "KERO Sable 4x4", presupuesto: 39000, diasSinContacto: 1, vendedor: "Facundo Ibarra" },
+  { id: "L-13", nombre: "Emiliano Frigerio", email: "emi_frigerio@yahoo.com", telefono: "+54 9 261 385-9106", canal: "showroom", interes: "TESSARI Lume 2.0", presupuesto: 43000, diasSinContacto: 5, vendedor: "Bruno Lattanzio" },
+  { id: "L-14", nombre: "Julieta Marmol", email: "marmol.julieta@outlook.com", telefono: "+54 9 341 917-3364", canal: "whatsapp", interes: "VANTEL Brio Comfort", presupuesto: 29000, diasSinContacto: 2, vendedor: "Milena Sarti" },
+  { id: "L-15", nombre: "Lautaro Bidegain", email: "lautibidegain@gmail.com", telefono: "+54 9 351 449-6720", canal: "portal", interes: "ALVA Vela 1.4", presupuesto: 26000, diasSinContacto: 6, vendedor: "Bruno Lattanzio" },
+  { id: "L-16", nombre: "Sofia Etchegaray", email: "s.etchegaray@hotmail.com", telefono: "+54 9 261 512-8894", canal: "showroom", interes: "MARLO Randa Cargo", presupuesto: 25000, diasSinContacto: 0, vendedor: "Facundo Ibarra" },
+  { id: "L-17", nombre: "Nicolas Baigorria", email: "nico.baigorria91@gmail.com", telefono: "+54 9 11 2087-6614", canal: "referido", interes: "KERO Duma Prime", presupuesto: 33000, diasSinContacto: 12, vendedor: "Milena Sarti" },
+  { id: "L-18", nombre: "Abril Nardelli", email: "abrilnardelli@yahoo.com", telefono: "+54 9 341 764-3025", canal: "web", interes: "OSMA Tilo Live", presupuesto: 28000, diasSinContacto: 3, vendedor: "Renata Villalba" },
+  { id: "L-19", nombre: "Ezequiel Pombo", email: "epombo@outlook.com", telefono: "+54 9 351 330-9187", canal: "telefono", interes: "NORVIK Talud 4x4", presupuesto: 35000, diasSinContacto: 7, vendedor: "Bruno Lattanzio" },
+  { id: "L-20", nombre: "Malena Riquelme", email: "male_riquelme@gmail.com", telefono: "+54 9 11 5540-2298", canal: "portal", interes: "ALVA Nira XLS", presupuesto: 34000, diasSinContacto: 1, vendedor: "Milena Sarti" },
+  { id: "L-21", nombre: "Ramiro Cuestas", email: "rcuestas@gmail.com", telefono: "+54 9 261 908-4471", canal: "whatsapp", interes: "TESSARI Ferro", presupuesto: 26000, diasSinContacto: 4, vendedor: "Facundo Ibarra" },
+  { id: "L-22", nombre: "Carla Vanzetti", email: "carlavanzetti@hotmail.com", telefono: "+54 9 341 216-7739", canal: "showroom", interes: "VANTEL Brio Sport 0km", presupuesto: 36000, diasSinContacto: 0, vendedor: "Renata Villalba" },
+  { id: "L-23", nombre: "Diego Aramburu", email: "dieguito.aramburu@gmail.com", telefono: "+54 9 11 6672-1904", canal: "referido", interes: "ZEFIR Cobre Hybrid", presupuesto: 22000, diasSinContacto: 2, vendedor: "Bruno Lattanzio" },
+  { id: "L-24", nombre: "Pilar Casaubon", email: "casaubon.pilar@yahoo.com", telefono: "+54 9 351 175-6620", canal: "web", interes: "KERO Sable Cross", presupuesto: 31000, diasSinContacto: 9, vendedor: "Milena Sarti" },
+  { id: "L-25", nombre: "Matias Ferreyra", email: "mferreyra77@outlook.com", telefono: "+54 9 261 634-8815", canal: "portal", interes: "ALVA Vela Comfort", presupuesto: 26000, diasSinContacto: 15, vendedor: "Facundo Ibarra" },
+  { id: "L-26", nombre: "Lucia Sanguinetti", email: "luciasanguinetti@gmail.com", telefono: "+54 9 341 402-5573", canal: "whatsapp", interes: "TESSARI Lume Sport", presupuesto: 34000, diasSinContacto: 1, vendedor: "Renata Villalba" },
+  { id: "L-27", nombre: "Federico Olguin", email: "fede_olguin@hotmail.com", telefono: "+54 9 11 3319-7748", canal: "telefono", interes: "MARLO Randa Pack", presupuesto: 31000, diasSinContacto: 5, vendedor: "Bruno Lattanzio" },
+  { id: "L-28", nombre: "Antonella Prieto", email: "aprieto04@gmail.com", telefono: "+54 9 351 587-2261", canal: "showroom", interes: "OSMA Tilo Plus", presupuesto: 23000, diasSinContacto: 0, vendedor: "Milena Sarti" },
+]
+
+export async function getLeads(): Promise<Lead[]> {
+  await sleep(300)
+  return LEADS
+}

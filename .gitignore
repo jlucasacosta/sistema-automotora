@@ -1,0 +1,14 @@
+node_modules/
+.next/
+dist/
+out/
+.vercel
+*.local
+*.log
+.DS_Store
+
+# Secrets: se ignora todo .env, MENOS el ejemplo con placeholders vacios.
+# La negacion va DESPUES de los patrones que lo incluyen, o no aplica.
+.env
+.env.*
+!.env.example

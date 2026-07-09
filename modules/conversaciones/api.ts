@@ -1,0 +1,86 @@
+// PATRON MOCK. Misma firma que la query real. Ver BACKEND.md.
+// Cada hilo esta atado a una unidad: en una automotora nadie escribe "hola", escribe
+// "¿sigue disponible el Sable?". Datos 100% ficticios.
+
+export type Mensaje = { id: string; de: "cliente" | "vendedor"; texto: string; hora: string }
+
+export type Hilo = {
+  id: string
+  cliente: string
+  unidad: string
+  canal: "whatsapp" | "portal" | "web"
+  ultimo: string
+  hora: string
+  sinLeer: number
+  mensajes: Mensaje[]
+}
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+const HILOS: Hilo[] = [
+  {
+    id: "H-01",
+    cliente: "Camila Duarte",
+    unidad: "KERO Sable 2.0 4x2",
+    canal: "portal",
+    ultimo: "¿Acepta permuta de un hatch 2016?",
+    hora: "09:42",
+    sinLeer: 2,
+    mensajes: [
+      { id: "m1", de: "cliente", texto: "Hola, vi el Sable 2022 publicado. ¿Sigue disponible?", hora: "09:12" },
+      { id: "m2", de: "vendedor", texto: "Hola Camila, si, sigue disponible. Esta en playa, lo podes ver hoy mismo.", hora: "09:20" },
+      { id: "m3", de: "cliente", texto: "¿Cual es el precio final? En el portal figura US$ 39.500", hora: "09:28" },
+      { id: "m4", de: "vendedor", texto: "Ese es el precio de lista. Con pago contado hay margen para hablar.", hora: "09:34" },
+      { id: "m5", de: "cliente", texto: "Perfecto. ¿Acepta permuta de un hatch 2016?", hora: "09:41" },
+      { id: "m6", de: "cliente", texto: "Tiene 118.000 km y esta al dia con la VTV.", hora: "09:42" },
+    ],
+  },
+  { id: "H-02", cliente: "Tomas Escalante", unidad: "ZEFIR Cobre E Long Range", canal: "web", ultimo: "¿Cuanta autonomia real tiene?", hora: "09:15", sinLeer: 1, mensajes: [
+    { id: "m1", de: "cliente", texto: "Buenas, me interesa el electrico.", hora: "09:02" },
+    { id: "m2", de: "vendedor", texto: "Hola Tomas. Es un 150 kW, 2023, 12.600 km.", hora: "09:09" },
+    { id: "m3", de: "cliente", texto: "¿Cuanta autonomia real tiene?", hora: "09:15" },
+  ] },
+  { id: "H-03", cliente: "Ariadna Pesce", unidad: "OSMA Tilo Plus", canal: "whatsapp", ultimo: "Lo pienso y te aviso", hora: "ayer", sinLeer: 0, mensajes: [
+    { id: "m1", de: "vendedor", texto: "Ariadna, te reservo el Tilo hasta el viernes?", hora: "ayer" },
+    { id: "m2", de: "cliente", texto: "Lo pienso y te aviso", hora: "ayer" },
+  ] },
+  { id: "H-04", cliente: "Bruno Lattanzio", unidad: "KERO Sable Cross 0km", canal: "whatsapp", ultimo: "¿Que cuota queda a 48 meses?", hora: "08:51", sinLeer: 1, mensajes: [
+    { id: "m1", de: "cliente", texto: "Vengo del showroom. ¿Que cuota queda a 48 meses?", hora: "08:51" },
+  ] },
+  { id: "H-05", cliente: "Joaquin Bentancor", unidad: "NORVIK Talud Limited 4x4", canal: "portal", ultimo: "Llevo la pickup el jueves para tasar", hora: "08:30", sinLeer: 0, mensajes: [
+    { id: "m1", de: "vendedor", texto: "Joaquin, para tomarte la pickup necesito verla.", hora: "08:22" },
+    { id: "m2", de: "cliente", texto: "Llevo la pickup el jueves para tasar", hora: "08:30" },
+  ] },
+  { id: "H-06", cliente: "Ignacio Zabaleta", unidad: "TESSARI Ferro 1.6", canal: "web", ultimo: "—", hora: "hace 11 d", sinLeer: 0, mensajes: [
+    { id: "m1", de: "vendedor", texto: "Ignacio, seguis interesado en el Ferro?", hora: "hace 11 d" },
+  ] },
+  { id: "H-07", cliente: "Delfina Grispo", unidad: "MARLO Randa 1.6 Pack", canal: "whatsapp", ultimo: "Mandame la cotizacion de la toma", hora: "ayer", sinLeer: 1, mensajes: [
+    { id: "m1", de: "cliente", texto: "Mandame la cotizacion de la toma", hora: "ayer" },
+  ] },
+  { id: "H-08", cliente: "Santiago Roldan", unidad: "VANTEL Brio Sport", canal: "whatsapp", ultimo: "Confirmo la prueba de manejo 16:30", hora: "10:05", sinLeer: 0, mensajes: [
+    { id: "m1", de: "vendedor", texto: "Santiago, te espero a las 16:30 para el test drive.", hora: "10:01" },
+    { id: "m2", de: "cliente", texto: "Confirmo la prueba de manejo 16:30", hora: "10:05" },
+  ] },
+  { id: "H-09", cliente: "Gaston Uriburu", unidad: "TESSARI Lume Sport", canal: "portal", ultimo: "No pude ir, disculpas", hora: "hace 8 d", sinLeer: 0, mensajes: [
+    { id: "m1", de: "cliente", texto: "No pude ir, disculpas", hora: "hace 8 d" },
+  ] },
+  { id: "H-10", cliente: "Valentina Ocampo", unidad: "KERO Sable 2.0 4x4 Limited", canal: "web", ultimo: "¿Me pasas dos opciones mas del mismo segmento?", hora: "10:22", sinLeer: 2, mensajes: [
+    { id: "m1", de: "cliente", texto: "Me gusto el 4x4 pero se me va de presupuesto.", hora: "10:18" },
+    { id: "m2", de: "cliente", texto: "¿Me pasas dos opciones mas del mismo segmento?", hora: "10:22" },
+  ] },
+  { id: "H-11", cliente: "Lautaro Bidegain", unidad: "ALVA Vela 1.4 Comfort", canal: "portal", ultimo: "Se me complico el credito", hora: "hace 6 d", sinLeer: 0, mensajes: [
+    { id: "m1", de: "vendedor", texto: "Lautaro, la seña vence el lunes.", hora: "hace 7 d" },
+    { id: "m2", de: "cliente", texto: "Se me complico el credito", hora: "hace 6 d" },
+  ] },
+  { id: "H-12", cliente: "Facundo Ibarra", unidad: "NORVIK Talud X4 Limited 0km", canal: "whatsapp", ultimo: "Firmo el viernes a la mañana", hora: "11:03", sinLeer: 0, mensajes: [
+    { id: "m1", de: "cliente", texto: "Firmo el viernes a la mañana", hora: "11:03" },
+  ] },
+  { id: "H-13", cliente: "Sofia Etchegaray", unidad: "MARLO Randa Cargo Max", canal: "whatsapp", ultimo: "¿Cuando esta el patentamiento?", hora: "11:40", sinLeer: 1, mensajes: [
+    { id: "m1", de: "cliente", texto: "¿Cuando esta el patentamiento?", hora: "11:40" },
+  ] },
+]
+
+export async function getHilos(): Promise<Hilo[]> {
+  await sleep(300)
+  return HILOS
+}

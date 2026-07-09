@@ -1,0 +1,89 @@
+// PATRON MOCK. Misma firma que la query real. Ver BACKEND.md.
+// La playa es la fuente de verdad de la unidad: el embudo y el comparador la consumen.
+// Marcas y modelos 100% INVENTADOS: nada de marcas registradas de terceros.
+import { theme } from "@/shell/theme"
+
+export type Segmento = "hatch" | "sedan" | "suv" | "pickup" | "utilitario" | "electrico"
+export type EstadoUnidad = "disponible" | "reservada" | "seniada" | "en preparacion" | "vendida"
+
+export type Unidad = {
+  id: string
+  marca: string
+  modelo: string
+  version: string
+  anio: number
+  km: number
+  precio: number // USD. Los autos se venden en dolares: es la firma del rubro.
+  cuota: number // ARS estimada, 48 meses
+  patente: string | null // 0km todavia sin patentar
+  estado: EstadoUnidad
+  diasPlaya: number
+  segmento: Segmento
+  motor: string
+  caja: "manual" | "automatica" | "CVT" | "directa"
+  combustible: "nafta" | "diesel" | "hibrido" | "electrico"
+  color: string
+}
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+// El corredor de precio de la playa. Los dos numeros viven en theme.banda:
+// ningun componente los inventa. Solo aplica a USADOS: un 0km no tiene corredor.
+export function precioReferencia(km: number) {
+  return Math.max(theme.banda.base - theme.banda.caida * km, 8000)
+}
+
+export function desvioPct(u: Unidad) {
+  if (u.km === 0) return 0
+  return ((u.precio / precioReferencia(u.km)) - 1) * 100
+}
+
+const UNIDADES: Unidad[] = [
+  { id: "U-101", marca: "ALVA", modelo: "Nira", version: "1.6 XLS", anio: 2021, km: 38000, precio: 33200, cuota: 486000, patente: "AF 412 KD", estado: "disponible", diasPlaya: 22, segmento: "hatch", motor: "1.6 16v", caja: "manual", combustible: "nafta", color: "Gris basalto" },
+  { id: "U-102", marca: "ALVA", modelo: "Nira", version: "GT", anio: 2019, km: 71500, precio: 26900, cuota: 394000, patente: "AC 908 TR", estado: "disponible", diasPlaya: 74, segmento: "hatch", motor: "1.4 turbo", caja: "manual", combustible: "nafta", color: "Rojo tiza" },
+  { id: "U-103", marca: "ALVA", modelo: "Vela", version: "1.4 Comfort", anio: 2018, km: 96200, precio: 25800, cuota: 378000, patente: "AB 337 LM", estado: "reservada", diasPlaya: 51, segmento: "sedan", motor: "1.4 16v", caja: "manual", combustible: "nafta", color: "Blanco polar" },
+  { id: "U-104", marca: "KERO", modelo: "Sable", version: "2.0 4x2", anio: 2022, km: 24700, precio: 39500, cuota: 579000, patente: "AG 175 WQ", estado: "disponible", diasPlaya: 96, segmento: "suv", motor: "2.0 16v", caja: "automatica", combustible: "nafta", color: "Negro grafito" },
+  { id: "U-105", marca: "KERO", modelo: "Sable", version: "Cross", anio: 2020, km: 58400, precio: 30400, cuota: 445000, patente: "AD 601 JX", estado: "seniada", diasPlaya: 18, segmento: "suv", motor: "1.8 16v", caja: "CVT", combustible: "nafta", color: "Verde musgo" },
+  { id: "U-106", marca: "KERO", modelo: "Duma", version: "1.5T Prime", anio: 2021, km: 41900, precio: 32100, cuota: 470000, patente: "AF 044 BN", estado: "disponible", diasPlaya: 34, segmento: "suv", motor: "1.5 turbo", caja: "automatica", combustible: "nafta", color: "Azul acero" },
+  { id: "U-107", marca: "NORVIK", modelo: "Talud", version: "X4 Full", anio: 2019, km: 112000, precio: 24900, cuota: 365000, patente: "AC 726 HP", estado: "disponible", diasPlaya: 128, segmento: "pickup", motor: "2.8 TDi", caja: "manual", combustible: "diesel", color: "Plata volcan" },
+  { id: "U-108", marca: "NORVIK", modelo: "Talud", version: "4x2 Base", anio: 2017, km: 148600, precio: 16400, cuota: 240000, patente: "AA 519 CG", estado: "disponible", diasPlaya: 87, segmento: "pickup", motor: "2.5 TDi", caja: "manual", combustible: "diesel", color: "Blanco polar" },
+  { id: "U-109", marca: "VANTEL", modelo: "Brio", version: "1.8 Comfort", anio: 2020, km: 66300, precio: 28700, cuota: 420000, patente: "AE 283 QF", estado: "disponible", diasPlaya: 41, segmento: "sedan", motor: "1.8 16v", caja: "automatica", combustible: "nafta", color: "Gris basalto" },
+  { id: "U-110", marca: "VANTEL", modelo: "Brio", version: "Sport", anio: 2022, km: 19800, precio: 36200, cuota: 530000, patente: "AG 890 VD", estado: "seniada", diasPlaya: 11, segmento: "sedan", motor: "2.0 turbo", caja: "automatica", combustible: "nafta", color: "Negro grafito" },
+  { id: "U-111", marca: "TESSARI", modelo: "Lume", version: "2.0 Signature", anio: 2021, km: 33400, precio: 41900, cuota: 614000, patente: "AF 355 ZK", estado: "disponible", diasPlaya: 142, segmento: "suv", motor: "2.0 turbo", caja: "automatica", combustible: "hibrido", color: "Bronce noche" },
+  { id: "U-112", marca: "TESSARI", modelo: "Ferro", version: "1.6 Elegance", anio: 2018, km: 88900, precio: 25400, cuota: 372000, patente: "AB 062 NR", estado: "disponible", diasPlaya: 63, segmento: "sedan", motor: "1.6 16v", caja: "manual", combustible: "nafta", color: "Beige duna" },
+  { id: "U-113", marca: "MARLO", modelo: "Randa", version: "Furgon 1.6", anio: 2019, km: 129400, precio: 18900, cuota: 277000, patente: "AC 447 MS", estado: "disponible", diasPlaya: 109, segmento: "utilitario", motor: "1.6 8v", caja: "manual", combustible: "nafta", color: "Blanco polar" },
+  { id: "U-114", marca: "MARLO", modelo: "Randa", version: "1.6 Pack", anio: 2021, km: 47200, precio: 30900, cuota: 453000, patente: "AF 718 DT", estado: "disponible", diasPlaya: 27, segmento: "utilitario", motor: "1.6 16v", caja: "manual", combustible: "nafta", color: "Gris basalto" },
+  { id: "U-115", marca: "ZEFIR", modelo: "Cobre", version: "E Long Range", anio: 2023, km: 12600, precio: 37400, cuota: 548000, patente: "AH 129 PL", estado: "disponible", diasPlaya: 9, segmento: "electrico", motor: "150 kW", caja: "directa", combustible: "electrico", color: "Blanco polar" },
+  { id: "U-116", marca: "OSMA", modelo: "Tilo", version: "1.0 Live", anio: 2020, km: 74800, precio: 27300, cuota: 400000, patente: "AE 950 RB", estado: "disponible", diasPlaya: 46, segmento: "hatch", motor: "1.0 12v", caja: "manual", combustible: "nafta", color: "Rojo tiza" },
+  { id: "U-117", marca: "OSMA", modelo: "Tilo", version: "Plus", anio: 2018, km: 103500, precio: 22700, cuota: 333000, patente: "AB 604 XW", estado: "disponible", diasPlaya: 71, segmento: "hatch", motor: "1.4 16v", caja: "manual", combustible: "nafta", color: "Azul acero" },
+  { id: "U-118", marca: "ALVA", modelo: "Nira", version: "1.6 LS", anio: 2017, km: 156900, precio: 17900, cuota: 262000, patente: "AA 271 FJ", estado: "disponible", diasPlaya: 134, segmento: "hatch", motor: "1.6 8v", caja: "manual", combustible: "nafta", color: "Gris basalto" },
+  { id: "U-119", marca: "KERO", modelo: "Sable", version: "2.0 4x4 Limited", anio: 2023, km: 8900, precio: 37900, cuota: 555000, patente: "AH 483 SC", estado: "reservada", diasPlaya: 6, segmento: "suv", motor: "2.0 turbo", caja: "automatica", combustible: "diesel", color: "Negro grafito" },
+  { id: "U-120", marca: "NORVIK", modelo: "Talud", version: "Limited 4x4", anio: 2022, km: 29100, precio: 34600, cuota: 507000, patente: "AG 316 KV", estado: "disponible", diasPlaya: 19, segmento: "pickup", motor: "2.8 TDi", caja: "automatica", combustible: "diesel", color: "Plata volcan" },
+  { id: "U-121", marca: "VANTEL", modelo: "Brio", version: "1.8 GLS", anio: 2016, km: 178300, precio: 13200, cuota: 193000, patente: "AA 038 GH", estado: "disponible", diasPlaya: 156, segmento: "sedan", motor: "1.8 8v", caja: "manual", combustible: "nafta", color: "Beige duna" },
+  { id: "U-122", marca: "TESSARI", modelo: "Lume", version: "Sport", anio: 2020, km: 52700, precio: 33100, cuota: 485000, patente: "AE 762 TN", estado: "disponible", diasPlaya: 88, segmento: "suv", motor: "2.0 turbo", caja: "automatica", combustible: "nafta", color: "Bronce noche" },
+  { id: "U-123", marca: "MARLO", modelo: "Randa", version: "Cargo Max", anio: 2020, km: 91400, precio: 24600, cuota: 360000, patente: "AD 195 YQ", estado: "vendida", diasPlaya: 58, segmento: "utilitario", motor: "1.6 16v", caja: "manual", combustible: "diesel", color: "Blanco polar" },
+  { id: "U-124", marca: "ZEFIR", modelo: "Cobre", version: "1.5 Hybrid", anio: 2019, km: 118700, precio: 21500, cuota: 315000, patente: "AC 853 LD", estado: "disponible", diasPlaya: 102, segmento: "electrico", motor: "1.5 + 60 kW", caja: "CVT", combustible: "hibrido", color: "Verde musgo" },
+  // --- 0km: sin patente hasta el patentamiento, y sin corredor de precio de usado ---
+  { id: "U-125", marca: "ALVA", modelo: "Nira", version: "1.6 XLS 0km", anio: 2026, km: 0, precio: 29900, cuota: 438000, patente: null, estado: "en preparacion", diasPlaya: 14, segmento: "hatch", motor: "1.6 16v", caja: "manual", combustible: "nafta", color: "Blanco polar" },
+  { id: "U-126", marca: "KERO", modelo: "Sable", version: "Cross 0km", anio: 2026, km: 0, precio: 41200, cuota: 604000, patente: null, estado: "disponible", diasPlaya: 31, segmento: "suv", motor: "1.8 16v", caja: "CVT", combustible: "nafta", color: "Gris basalto" },
+  { id: "U-127", marca: "NORVIK", modelo: "Talud", version: "X4 Limited 0km", anio: 2026, km: 0, precio: 52400, cuota: 768000, patente: null, estado: "reservada", diasPlaya: 7, segmento: "pickup", motor: "2.8 TDi", caja: "automatica", combustible: "diesel", color: "Negro grafito" },
+  { id: "U-128", marca: "VANTEL", modelo: "Brio", version: "Sport 0km", anio: 2026, km: 0, precio: 34700, cuota: 508000, patente: null, estado: "disponible", diasPlaya: 23, segmento: "sedan", motor: "2.0 turbo", caja: "automatica", combustible: "nafta", color: "Azul acero" },
+  { id: "U-129", marca: "ZEFIR", modelo: "Cobre", version: "E Long Range 0km", anio: 2026, km: 0, precio: 46900, cuota: 687000, patente: null, estado: "en preparacion", diasPlaya: 3, segmento: "electrico", motor: "150 kW", caja: "directa", combustible: "electrico", color: "Plata volcan" },
+  { id: "U-130", marca: "TESSARI", modelo: "Lume", version: "2.0 Signature 0km", anio: 2026, km: 0, precio: 48500, cuota: 710000, patente: null, estado: "disponible", diasPlaya: 39, segmento: "suv", motor: "2.0 turbo", caja: "automatica", combustible: "hibrido", color: "Bronce noche" },
+]
+
+export async function getUnidades(): Promise<Unidad[]> {
+  await sleep(280)
+  return UNIDADES
+}
+
+export async function getUnidad(id: string): Promise<Unidad | undefined> {
+  await sleep(120)
+  return UNIDADES.find((u) => u.id === id)
+}
+
+// Solo los usados entran al corredor precio x km: un 0km no tiene mercado de usado.
+export async function getUsados(): Promise<Unidad[]> {
+  await sleep(280)
+  return UNIDADES.filter((u) => u.km > 0)
+}

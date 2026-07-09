@@ -1,0 +1,148 @@
+// automotora.ts · El reloj de la playa y el semaforo del embudo, en un solo lugar.
+// Los umbrales viven en theme.aging / theme.lead / theme.sena / theme.banda.
+// Ningun componente inventa un numero magico ni escribe un color: solo pide la clase.
+// Tailwind NO ve clases armadas por concatenacion: todos los mapas son literales.
+import { theme } from "./theme"
+
+// --- Antiguedad de la unidad en la playa: plata quieta ---
+export type NivelAging = "fresco" | "tibio" | "aniejo"
+
+export function nivelDeAging(dias: number): NivelAging {
+  if (dias <= theme.aging.fresco) return "fresco"
+  if (dias <= theme.aging.tibio) return "tibio"
+  return "aniejo"
+}
+
+export const chipAging: Record<NivelAging, string> = {
+  fresco: "bg-success/15 text-success",
+  tibio: "bg-warning/15 text-warning",
+  aniejo: "bg-danger/15 text-danger",
+}
+export const rellenoAging: Record<NivelAging, string> = {
+  fresco: "bg-success",
+  tibio: "bg-warning",
+  aniejo: "bg-danger",
+}
+export const puntoAging: Record<NivelAging, string> = {
+  fresco: "fill-success",
+  tibio: "fill-warning",
+  aniejo: "fill-danger",
+}
+
+// --- Temperatura del lead: dias sin contacto ---
+export type NivelLead = "activo" | "tibio" | "frio"
+
+export function nivelDeLead(diasSinContacto: number): NivelLead {
+  if (diasSinContacto >= theme.lead.frio) return "frio"
+  if (diasSinContacto >= theme.lead.tibio) return "tibio"
+  return "activo"
+}
+
+export const chipLead: Record<NivelLead, string> = {
+  activo: "bg-success/15 text-success",
+  tibio: "bg-warning/15 text-warning",
+  frio: "bg-danger/15 text-danger",
+}
+export const textoLead: Record<NivelLead, string> = {
+  activo: "text-success",
+  tibio: "text-warning",
+  frio: "text-danger",
+}
+
+// --- La seña: dias que le quedan a la reserva. Negativo = vencida. ---
+export type NivelSena = "vigente" | "por-vencer" | "vencida"
+
+export function nivelDeSena(diasRestantes: number): NivelSena {
+  if (diasRestantes < 0) return "vencida"
+  if (diasRestantes <= theme.sena.alerta) return "por-vencer"
+  return "vigente"
+}
+
+export const bordeSena: Record<NivelSena, string> = {
+  vigente: "border-l-success",
+  "por-vencer": "border-l-warning",
+  vencida: "border-l-danger",
+}
+
+// --- Estado de la unidad ---
+export type EstadoUnidad = "disponible" | "reservada" | "seniada" | "en preparacion" | "vendida"
+
+export const chipUnidad: Record<EstadoUnidad, string> = {
+  disponible: "bg-primary/20 text-fg",
+  reservada: "bg-warning/15 text-warning",
+  seniada: "bg-accent/20 text-accent",
+  "en preparacion": "bg-info/15 text-info",
+  vendida: "bg-success/15 text-success",
+}
+
+// --- Etapas del embudo. El ancho del trapecio es el dato; el color es la etapa. ---
+export type Etapa = "consulta" | "contactado" | "test drive" | "cotizacion" | "senia" | "entrega"
+
+export const ETAPAS: Etapa[] = ["consulta", "contactado", "test drive", "cotizacion", "senia", "entrega"]
+
+export const rotuloEtapa: Record<Etapa, string> = {
+  consulta: "Consulta",
+  contactado: "Contactado",
+  "test drive": "Test drive",
+  cotizacion: "Cotizacion",
+  senia: "Seña",
+  entrega: "Entrega",
+}
+export const rellenoEtapa: Record<Etapa, string> = {
+  consulta: "bg-info",
+  contactado: "bg-info",
+  "test drive": "bg-primary",
+  cotizacion: "bg-primary",
+  senia: "bg-accent",
+  entrega: "bg-success",
+}
+// El trapecio se tinta suave; el rotulo va encima en fg. Clases LITERALES: Tailwind
+// no ve `bg-${x}` ni `${x}/20` armado por concatenacion.
+export const rellenoEtapaSuave: Record<Etapa, string> = {
+  consulta: "bg-info/20",
+  contactado: "bg-info/30",
+  "test drive": "bg-primary/30",
+  cotizacion: "bg-primary/45",
+  senia: "bg-accent/35",
+  entrega: "bg-success/40",
+}
+export const chipEtapa: Record<Etapa, string> = {
+  consulta: "bg-info/15 text-info",
+  contactado: "bg-info/15 text-info",
+  "test drive": "bg-primary/20 text-fg",
+  cotizacion: "bg-primary/20 text-fg",
+  senia: "bg-accent/20 text-accent",
+  entrega: "bg-success/15 text-success",
+}
+
+// --- Desvio contra el precio de referencia del corredor precio x km ---
+export type NivelBanda = "oportunidad" | "justo" | "sobre"
+
+export function nivelDeBanda(desvioPct: number): NivelBanda {
+  if (desvioPct <= theme.banda.oportunidad) return "oportunidad"
+  if (desvioPct >= theme.banda.sobre) return "sobre"
+  return "justo"
+}
+
+export const chipBanda: Record<NivelBanda, string> = {
+  oportunidad: "bg-success/15 text-success",
+  justo: "bg-subtle text-muted",
+  sobre: "bg-danger/15 text-danger",
+}
+export const puntoBanda: Record<NivelBanda, string> = {
+  oportunidad: "fill-success",
+  justo: "fill-primary",
+  sobre: "fill-danger",
+}
+
+// --- Formatos. Los autos se venden en USD y eso es la firma del rubro. ---
+export function usd(n: number) {
+  return "US$ " + n.toLocaleString("es-AR")
+}
+export function km(n: number) {
+  return n === 0 ? "0 km" : n.toLocaleString("es-AR") + " km"
+}
+// Las cuotas se hablan en pesos.
+export function ars(n: number) {
+  return "$ " + n.toLocaleString("es-AR")
+}

@@ -2,6 +2,8 @@
 // Datos 100% ficticios. Estados mezclados a proposito: un boleto rechazado y una
 // anulacion tienen que verse en pantalla, o el sistema parece muerto.
 
+import raw from "./data.json"
+
 export type FormaPago = "contado" | "prendario" | "plan de ahorro" | "permuta + saldo"
 export type EstadoBoleto = "cobrada" | "pendiente" | "rechazada" | "anulada"
 
@@ -21,36 +23,7 @@ export type Boleto = {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-const BOLETOS: Boleto[] = [
-  { id: "BOL-2291", fecha: "09/07", comprador: "Sofia Etchegaray", unidad: "MARLO Randa Cargo Max 2020", patente: "AD 195 YQ", precio: 24600, sena: 3000, formaPago: "prendario", estado: "pendiente", vendedor: "Facundo Ibarra", comision: 492 },
-  { id: "BOL-2290", fecha: "08/07", comprador: "Nicolas Baigorria", unidad: "KERO Duma 1.5T Prime 2021", patente: "AF 044 BN", precio: 32100, sena: 5000, formaPago: "contado", estado: "cobrada", vendedor: "Milena Sarti", comision: 642 },
-  { id: "BOL-2289", fecha: "08/07", comprador: "Abril Nardelli", unidad: "OSMA Tilo 1.0 Live 2020", patente: "AE 950 RB", precio: 27300, sena: 2500, formaPago: "permuta + saldo", estado: "cobrada", vendedor: "Renata Villalba", comision: 546 },
-  { id: "BOL-2288", fecha: "07/07", comprador: "Ezequiel Pombo", unidad: "NORVIK Talud Limited 4x4 2022", patente: "AG 316 KV", precio: 34600, sena: 4000, formaPago: "prendario", estado: "rechazada", vendedor: "Bruno Lattanzio", comision: 0 },
-  { id: "BOL-2287", fecha: "07/07", comprador: "Malena Riquelme", unidad: "ALVA Nira 1.6 XLS 2021", patente: "AF 412 KD", precio: 33200, sena: 3500, formaPago: "contado", estado: "cobrada", vendedor: "Milena Sarti", comision: 664 },
-  { id: "BOL-2286", fecha: "05/07", comprador: "Ramiro Cuestas", unidad: "TESSARI Ferro 1.6 Elegance 2018", patente: "AB 062 NR", precio: 25400, sena: 2000, formaPago: "plan de ahorro", estado: "pendiente", vendedor: "Facundo Ibarra", comision: 508 },
-  { id: "BOL-2285", fecha: "04/07", comprador: "Carla Vanzetti", unidad: "VANTEL Brio Sport 0km 2026", patente: null, precio: 34700, sena: 6000, formaPago: "contado", estado: "cobrada", vendedor: "Renata Villalba", comision: 694 },
-  { id: "BOL-2284", fecha: "04/07", comprador: "Diego Aramburu", unidad: "ZEFIR Cobre 1.5 Hybrid 2019", patente: "AC 853 LD", precio: 21500, sena: 2000, formaPago: "permuta + saldo", estado: "cobrada", vendedor: "Bruno Lattanzio", comision: 430 },
-  { id: "BOL-2283", fecha: "03/07", comprador: "Pilar Casaubon", unidad: "KERO Sable Cross 2020", patente: "AD 601 JX", precio: 30400, sena: 3000, formaPago: "prendario", estado: "pendiente", vendedor: "Milena Sarti", comision: 608 },
-  { id: "BOL-2282", fecha: "02/07", comprador: "Matias Ferreyra", unidad: "ALVA Vela 1.4 Comfort 2018", patente: "AB 337 LM", precio: 25800, sena: 2500, formaPago: "contado", estado: "anulada", vendedor: "Facundo Ibarra", comision: 0 },
-  { id: "BOL-2281", fecha: "01/07", comprador: "Lucia Sanguinetti", unidad: "TESSARI Lume Sport 2020", patente: "AE 762 TN", precio: 33100, sena: 4000, formaPago: "prendario", estado: "cobrada", vendedor: "Renata Villalba", comision: 662 },
-  { id: "BOL-2280", fecha: "30/06", comprador: "Federico Olguin", unidad: "MARLO Randa 1.6 Pack 2021", patente: "AF 718 DT", precio: 30900, sena: 3000, formaPago: "plan de ahorro", estado: "cobrada", vendedor: "Bruno Lattanzio", comision: 618 },
-  { id: "BOL-2279", fecha: "28/06", comprador: "Antonella Prieto", unidad: "OSMA Tilo Plus 2018", patente: "AB 604 XW", precio: 22700, sena: 2000, formaPago: "contado", estado: "cobrada", vendedor: "Milena Sarti", comision: 454 },
-  { id: "BOL-2278", fecha: "27/06", comprador: "Hernan Zubizarreta", unidad: "NORVIK Talud X4 Full 2019", patente: "AC 726 HP", precio: 24900, sena: 2500, formaPago: "permuta + saldo", estado: "rechazada", vendedor: "Facundo Ibarra", comision: 0 },
-  { id: "BOL-2277", fecha: "26/06", comprador: "Rocio Amarilla", unidad: "VANTEL Brio 1.8 Comfort 2020", patente: "AE 283 QF", precio: 28700, sena: 3000, formaPago: "prendario", estado: "cobrada", vendedor: "Renata Villalba", comision: 574 },
-  { id: "BOL-2276", fecha: "25/06", comprador: "Julian Recalde", unidad: "KERO Sable 2.0 4x2 2022", patente: "AG 175 WQ", precio: 39500, sena: 5000, formaPago: "contado", estado: "cobrada", vendedor: "Bruno Lattanzio", comision: 790 },
-  { id: "BOL-2275", fecha: "24/06", comprador: "Guadalupe Insaurralde", unidad: "ALVA Nira GT 2019", patente: "AC 908 TR", precio: 26900, sena: 2500, formaPago: "plan de ahorro", estado: "pendiente", vendedor: "Milena Sarti", comision: 538 },
-  { id: "BOL-2274", fecha: "22/06", comprador: "Sebastian Miranda", unidad: "ZEFIR Cobre E Long Range 2023", patente: "AH 129 PL", precio: 37400, sena: 5000, formaPago: "prendario", estado: "cobrada", vendedor: "Facundo Ibarra", comision: 748 },
-  { id: "BOL-2273", fecha: "21/06", comprador: "Micaela Bordon", unidad: "VANTEL Brio 1.8 GLS 2016", patente: "AA 038 GH", precio: 13200, sena: 1500, formaPago: "contado", estado: "cobrada", vendedor: "Renata Villalba", comision: 264 },
-  { id: "BOL-2272", fecha: "19/06", comprador: "Agustin Cardozo", unidad: "TESSARI Lume 2.0 Signature 2021", patente: "AF 355 ZK", precio: 41900, sena: 6000, formaPago: "permuta + saldo", estado: "anulada", vendedor: "Bruno Lattanzio", comision: 0 },
-  { id: "BOL-2271", fecha: "18/06", comprador: "Brenda Sotelo", unidad: "MARLO Randa Furgon 1.6 2019", patente: "AC 447 MS", precio: 18900, sena: 2000, formaPago: "prendario", estado: "cobrada", vendedor: "Milena Sarti", comision: 378 },
-  { id: "BOL-2270", fecha: "17/06", comprador: "Ivan Lombardo", unidad: "NORVIK Talud 4x2 Base 2017", patente: "AA 519 CG", precio: 16400, sena: 1500, formaPago: "contado", estado: "cobrada", vendedor: "Facundo Ibarra", comision: 328 },
-  { id: "BOL-2269", fecha: "15/06", comprador: "Paula Berenguer", unidad: "KERO Sable 2.0 4x4 Limited 2023", patente: "AH 483 SC", precio: 37900, sena: 5000, formaPago: "plan de ahorro", estado: "pendiente", vendedor: "Renata Villalba", comision: 758 },
-  { id: "BOL-2268", fecha: "13/06", comprador: "Tomas Quiroga", unidad: "ALVA Nira 1.6 LS 2017", patente: "AA 271 FJ", precio: 17900, sena: 1500, formaPago: "contado", estado: "cobrada", vendedor: "Bruno Lattanzio", comision: 358 },
-  { id: "BOL-2267", fecha: "11/06", comprador: "Victoria Elizalde", unidad: "TESSARI Lume 2.0 Signature 0km 2026", patente: null, precio: 48500, sena: 8000, formaPago: "prendario", estado: "cobrada", vendedor: "Milena Sarti", comision: 970 },
-  { id: "BOL-2266", fecha: "09/06", comprador: "Franco Depetris", unidad: "OSMA Tilo 1.0 Live 2020", patente: "AE 950 RB", precio: 27300, sena: 2500, formaPago: "permuta + saldo", estado: "cobrada", vendedor: "Facundo Ibarra", comision: 546 },
-]
-
 export async function getBoletos(): Promise<Boleto[]> {
   await sleep(300)
-  return BOLETOS
+  return structuredClone(raw.boletos) as Boleto[]
 }

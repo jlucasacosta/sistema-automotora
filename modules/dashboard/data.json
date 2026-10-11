@@ -1,0 +1,43 @@
+{
+  "diales": [
+    {
+      "id": "1",
+      "label": "Ventas del mes",
+      "valor": 17,
+      "max": 30,
+      "redlineDesde": 12,
+      "unidad": "u",
+      "invertido": true
+    },
+    {
+      "id": "2",
+      "label": "Aging promedio",
+      "valor": 62,
+      "max": 120,
+      "redlineDesde": 60,
+      "unidad": "d"
+    },
+    {
+      "id": "3",
+      "label": "Sobre el corredor",
+      "valor": 5,
+      "max": 12,
+      "redlineDesde": 6,
+      "unidad": "u"
+    },
+    {
+      "id": "4",
+      "label": "Leads frios",
+      "valor": 3,
+      "max": 12,
+      "redlineDesde": 6,
+      "unidad": ""
+    }
+  ],
+  "resumen": {
+    "valorEmbudo": 561800,
+    "seniasActivas": 2,
+    "seniasVencidas": 1,
+    "entregasHoy": 3
+  }
+}

@@ -2,6 +2,7 @@
 // El dato sigue al arquetipo: un embudo necesita etapa + monto, no filas de tabla.
 // Personas, marcas y telefonos 100% ficticios.
 import type { Etapa } from "@/shell/automotora"
+import raw from "./data.json"
 
 export type Canal = "showroom" | "portal" | "web" | "whatsapp" | "referido" | "telefono"
 
@@ -24,41 +25,9 @@ export type Deal = {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-const DEALS: Deal[] = [
-  // --- consulta ---
-  { id: "D-3401", cliente: "Camila Duarte", telefono: "+54 9 11 4783-2610", canal: "portal", unidadId: "U-104", etapa: "consulta", monto: 39500, permuta: null, diasSinContacto: 1, proximoPaso: "Primer llamado", vendedor: "Milena Sarti" },
-  { id: "D-3402", cliente: "Tomas Escalante", telefono: "+54 9 351 662-4188", canal: "web", unidadId: "U-115", etapa: "consulta", monto: 37400, permuta: null, diasSinContacto: 2, proximoPaso: "Enviar ficha tecnica", vendedor: "Facundo Ibarra" },
-  { id: "D-3403", cliente: "Ariadna Pesce", telefono: "+54 9 341 508-9372", canal: "whatsapp", unidadId: "U-117", etapa: "consulta", monto: 22700, permuta: { modelo: "OSMA Tilo 1.0", anio: 2013, toma: 7400 }, diasSinContacto: 9, proximoPaso: "Sin respuesta, reintentar", vendedor: "Milena Sarti" },
-  { id: "D-3404", cliente: "Bruno Lattanzio", telefono: "+54 9 261 447-0523", canal: "showroom", unidadId: "U-126", etapa: "consulta", monto: 41200, permuta: null, diasSinContacto: 0, proximoPaso: "Cotizar plan de ahorro", vendedor: "Renata Villalba" },
-  { id: "D-3405", cliente: "Mora Cantero", telefono: "+54 9 11 5296-7431", canal: "portal", unidadId: "U-121", etapa: "consulta", monto: 13200, permuta: null, diasSinContacto: 4, proximoPaso: "Confirmar interes", vendedor: "Facundo Ibarra" },
-
-  // --- contactado ---
-  { id: "D-3406", cliente: "Joaquin Bentancor", telefono: "+54 9 341 273-6605", canal: "referido", unidadId: "U-120", etapa: "contactado", monto: 34600, permuta: { modelo: "NORVIK Talud 4x2", anio: 2015, toma: 11800 }, diasSinContacto: 1, proximoPaso: "Tasar la permuta el jueves", vendedor: "Bruno Lattanzio" },
-  { id: "D-3407", cliente: "Renata Villalba", telefono: "+54 9 11 6034-8917", canal: "web", unidadId: "U-106", etapa: "contactado", monto: 32100, permuta: null, diasSinContacto: 3, proximoPaso: "Agendar test drive", vendedor: "Milena Sarti" },
-  { id: "D-3408", cliente: "Ignacio Zabaleta", telefono: "+54 9 351 819-2264", canal: "telefono", unidadId: "U-112", etapa: "contactado", monto: 25400, permuta: null, diasSinContacto: 11, proximoPaso: "Lead frio: ultima llamada", vendedor: "Renata Villalba" },
-  { id: "D-3409", cliente: "Delfina Grispo", telefono: "+54 9 261 730-5548", canal: "whatsapp", unidadId: "U-114", etapa: "contactado", monto: 30900, permuta: { modelo: "MARLO Randa Furgon", anio: 2014, toma: 9200 }, diasSinContacto: 2, proximoPaso: "Enviar cotizacion de toma", vendedor: "Facundo Ibarra" },
-
-  // --- test drive ---
-  { id: "D-3410", cliente: "Santiago Roldan", telefono: "+54 9 11 3928-4470", canal: "showroom", unidadId: "U-110", etapa: "test drive", monto: 36200, permuta: null, diasSinContacto: 0, proximoPaso: "Prueba de manejo hoy 16:30", vendedor: "Bruno Lattanzio" },
-  { id: "D-3411", cliente: "Milena Sarti", telefono: "+54 9 341 655-1289", canal: "referido", unidadId: "U-105", etapa: "test drive", monto: 30400, permuta: { modelo: "ALVA Vela 1.4", anio: 2016, toma: 10600 }, diasSinContacto: 1, proximoPaso: "Segunda prueba con la esposa", vendedor: "Milena Sarti" },
-  { id: "D-3412", cliente: "Gaston Uriburu", telefono: "+54 9 351 204-7736", canal: "portal", unidadId: "U-122", etapa: "test drive", monto: 33100, permuta: null, diasSinContacto: 8, proximoPaso: "No confirmo la prueba", vendedor: "Renata Villalba" },
-
-  // --- cotizacion: de aca sale el Comparador ---
-  { id: "D-3413", cliente: "Valentina Ocampo", telefono: "+54 9 11 4471-8052", canal: "web", unidadId: "U-119", etapa: "cotizacion", monto: 37900, permuta: { modelo: "KERO Sable Cross", anio: 2017, toma: 14300 }, diasSinContacto: 1, proximoPaso: "Comparar 3 candidatas", vendedor: "Facundo Ibarra" },
-  { id: "D-3414", cliente: "Emiliano Frigerio", telefono: "+54 9 261 385-9106", canal: "showroom", unidadId: "U-111", etapa: "cotizacion", monto: 41900, permuta: null, diasSinContacto: 5, proximoPaso: "Espera respuesta del banco", vendedor: "Bruno Lattanzio" },
-  { id: "D-3415", cliente: "Julieta Marmol", telefono: "+54 9 341 917-3364", canal: "whatsapp", unidadId: "U-109", etapa: "cotizacion", monto: 28700, permuta: { modelo: "VANTEL Brio 1.8", anio: 2012, toma: 6900 }, diasSinContacto: 2, proximoPaso: "Ajustar cuota a 48 meses", vendedor: "Milena Sarti" },
-
-  // --- seña: una vigente, una VENCIDA (el frame-firma) ---
-  { id: "D-3416", cliente: "Facundo Ibarra", telefono: "+54 9 11 2760-5583", canal: "referido", unidadId: "U-127", etapa: "senia", monto: 52400, permuta: null, diasSinContacto: 0, proximoPaso: "Firma de boleto el viernes", vendedor: "Renata Villalba", senaDias: 5 },
-  { id: "D-3417", cliente: "Lautaro Bidegain", telefono: "+54 9 351 449-6720", canal: "portal", unidadId: "U-103", etapa: "senia", monto: 25800, permuta: null, diasSinContacto: 6, proximoPaso: "SEÑA VENCIDA: la unidad vuelve a playa", vendedor: "Bruno Lattanzio", senaDias: -2 },
-
-  // --- entrega ---
-  { id: "D-3418", cliente: "Sofia Etchegaray", telefono: "+54 9 261 512-8894", canal: "showroom", unidadId: "U-123", etapa: "entrega", monto: 24600, permuta: null, diasSinContacto: 0, proximoPaso: "Patentamiento en curso", vendedor: "Facundo Ibarra" },
-]
-
 export async function getDeals(): Promise<Deal[]> {
   await sleep(300)
-  return DEALS
+  return structuredClone(raw.deals) as Deal[]
 }
 
 // Al mover una ficha de etapa, el ancho de los dos trapecios cambia: el ancho ES el dato.

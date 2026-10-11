@@ -7,9 +7,9 @@ export type NavItem = { label: string; href: string; icon: LucideIcon }
 export const nav: NavItem[] = [
   { label: "Panel", href: "/dashboard", icon: Gauge },
   { label: "Pipeline", href: "/pipeline", icon: Filter },
-  { label: "Catalogo", href: "/catalogo", icon: Car },
+  { label: "Catálogo", href: "/catalogo", icon: Car },
   { label: "Ventas", href: "/ventas", icon: ReceiptText },
   { label: "Mensajes", href: "/conversaciones", icon: MessageSquare },
   { label: "Contactos", href: "/contactos", icon: Users },
-  { label: "Configuracion", href: "/config", icon: Settings },
+  { label: "Configuración", href: "/config", icon: Settings },
 ]

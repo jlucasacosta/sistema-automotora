@@ -9,7 +9,7 @@
 // filas recibe el ribbon "MEJOR VALOR". Ningun otro sistema tiene drag-to-compare.
 import { useEffect, useState, type KeyboardEvent } from "react"
 import { Trophy, X } from "lucide-react"
-import { usd, ars, km as fmtKm } from "./automotora"
+import { usd, ars, rotuloCaja, km as fmtKm } from "./automotora"
 
 export type UnidadComparable = {
   id: string
@@ -56,9 +56,9 @@ const FILAS: Fila[] = [
   { key: "cuota", label: "Cuota estimada (48m)", valor: (u) => u.cuota, texto: (u) => ars(u.cuota), mejor: "min" },
   // Dias en stock NO puntua: mas dias no es una virtud de la unidad, es plata quieta
   // del lado de la concesionaria. Se muestra como contexto de negociacion, sin ganador.
-  { key: "diasPlaya", label: "Dias en stock", valor: () => null, texto: (u) => `${u.diasPlaya} d`, mejor: null },
+  { key: "diasPlaya", label: "Días en stock", valor: () => null, texto: (u) => `${u.diasPlaya} d`, mejor: null },
   { key: "motor", label: "Motor", valor: () => null, texto: (u) => u.motor, mejor: null },
-  { key: "caja", label: "Caja", valor: () => null, texto: (u) => u.caja, mejor: null },
+  { key: "caja", label: "Caja", valor: () => null, texto: (u) => rotuloCaja[u.caja] ?? u.caja, mejor: null },
 ]
 
 const SLOTS = 3
@@ -135,7 +135,7 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
       <div className="surface-card flex flex-col p-3">
         <h3 className="font-heading text-[0.6875rem] font-bold uppercase tracking-widest text-muted">Unidades para comparar</h3>
         <p className="mb-2 mt-1 text-[0.625rem] leading-snug text-muted">
-          Arrastra hasta 3 unidades a la bandeja, o hace click en una para sumarla.
+          Arrastrá hasta 3 unidades a la bandeja, o hacé click en una para sumarla.
         </p>
         <ul tabIndex={0} aria-label="Unidades para comparar" className="max-h-[19rem] space-y-1.5 overflow-y-auto pr-1">
           {disponibles.map((u) => (
@@ -267,7 +267,7 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
         ) : (
           <div role="row">
             <p role="cell" className="px-3 py-12 text-center text-xs text-muted">
-              Arrastra una unidad desde la izquierda para empezar a comparar.
+              Arrastrá una unidad desde la izquierda para empezar a comparar.
             </p>
           </div>
         )}

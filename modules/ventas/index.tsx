@@ -103,7 +103,7 @@ export function VentasPage() {
                 <Linea label="Saldo" valor={usd(saldo)} />
                 <Linea label="Forma de pago" valor={b.formaPago} />
                 <Linea label="Vendedor" valor={b.vendedor} />
-                <Linea label="Comision" valor={b.comision ? usd(b.comision) : "—"} />
+                <Linea label="Comisión" valor={b.comision ? usd(b.comision) : "—"} />
               </div>
             </li>
           )

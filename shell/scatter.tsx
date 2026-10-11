@@ -67,7 +67,7 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
         viewBox={`0 0 ${W} ${H}`}
         className="w-full"
         role="img"
-        aria-label="Grafico de precio contra kilometraje de las unidades usadas. El detalle de cada unidad esta en la tabla que sigue."
+        aria-label="Gráfico de precio contra kilometraje de las unidades usadas. El detalle de cada unidad está en la tabla que sigue."
       >
         {ticksPrecio.map((p) => (
           <g key={p}>
@@ -98,7 +98,7 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
               strokeWidth={1}
               opacity={0.9}
             >
-              <title>{`${p.etiqueta} · ${usd(p.precio)} · ${p.km.toLocaleString("es-AR")} km · ${p.diasPlaya} dias en stock · ${desvio >= 0 ? "+" : ""}${desvio.toFixed(1)}% vs referencia`}</title>
+              <title>{`${p.etiqueta} · ${usd(p.precio)} · ${p.km.toLocaleString("es-AR")} km · ${p.diasPlaya} días en stock · ${desvio >= 0 ? "+" : ""}${desvio.toFixed(1)}% vs referencia`}</title>
             </circle>
           )
         })}
@@ -106,14 +106,14 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
 
       {/* Los mismos datos del grafico, para lector de pantalla: el color solo no alcanza. */}
       <table className="sr-only">
-        <caption>Unidades usadas: precio, kilometraje, dias en stock y posicion respecto de la banda de referencia</caption>
+        <caption>Unidades usadas: precio, kilometraje, días en stock y posición respecto de la banda de referencia</caption>
         <thead>
           <tr>
             <th scope="col">Unidad</th>
             <th scope="col">Precio</th>
             <th scope="col">Kilometraje</th>
-            <th scope="col">Dias en stock</th>
-            <th scope="col">Posicion</th>
+            <th scope="col">Días en stock</th>
+            <th scope="col">Posición</th>
           </tr>
         </thead>
         <tbody>

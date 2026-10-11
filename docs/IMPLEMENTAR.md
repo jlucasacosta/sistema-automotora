@@ -259,7 +259,7 @@ insert into public.diales_config (id, orden, label, max, redline_desde, unidad, 
   ('ventas-mes',     1, 'Ventas del mes',     30, 12, 'u', true),
   ('aging-promedio', 2, 'Aging promedio',    120, 60, 'd', false),
   ('sobre-corredor', 3, 'Sobre el corredor',  12,  6, 'u', false),
-  ('leads-frios',    4, 'Leads frios',        12,  6, '',  false);
+  ('leads-frios',    4, 'Leads fríos',        12,  6, '',  false);
 ```
 
 **Bloque 2 — Vistas.** Devuelven los datos con la forma exacta que espera el frontend.

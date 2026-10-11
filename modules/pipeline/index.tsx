@@ -117,8 +117,8 @@ function Ficha({
         >
           {sena === "vencida" && <AlertTriangle size={11} strokeWidth={2.5} />}
           {sena === "vencida"
-            ? `Seña vencio hace ${Math.abs(d.senaDias as number)} dias`
-            : `Seña vence en ${d.senaDias} dias`}
+            ? `Seña venció hace ${Math.abs(d.senaDias as number)} días`
+            : `Seña vence en ${d.senaDias} días`}
         </span>
       )}
     </div>
@@ -167,7 +167,7 @@ export function PipelinePage() {
     moverDeal(d.id, e)
     setDeals((ds) => ds.map((x) => (x.id === id ? { ...x, etapa: e } : x)))
     if (e === "entrega") setEntregadasHoy((n) => n + 1)
-    setAviso(`${d.cliente} paso a ${rotuloEtapa[e]}`)
+    setAviso(`${d.cliente} pasó a ${rotuloEtapa[e]}`)
   }
 
   const soltarEn = (e: Etapa) => {
@@ -200,7 +200,7 @@ export function PipelinePage() {
         <div>
           <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Pipeline</h1>
           <p className="text-[0.6875rem] text-muted">
-            El ancho de cada etapa es la cantidad de oportunidades. Arrastra una ficha para avanzarla, o elegila con el
+            El ancho de cada etapa es la cantidad de oportunidades. Arrastrá una ficha para avanzarla, o elegila con el
             teclado y movela con las flechas izquierda y derecha.
           </p>
         </div>

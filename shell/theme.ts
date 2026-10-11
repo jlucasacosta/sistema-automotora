@@ -43,7 +43,7 @@ export type Theme = {
 }
 
 export const vertice: Theme = {
-  brand: { name: "VERTICE" },
+  brand: { name: "VÉRTICE" },
   mode: "dark",
   nav: "topbar",
   elevation: "flat",

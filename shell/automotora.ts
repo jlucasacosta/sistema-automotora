@@ -75,6 +75,46 @@ export const chipUnidad: Record<EstadoUnidad, string> = {
   vendida: "bg-success/15 text-success",
 }
 
+// --- Rotulos de display (con tildes) para valores que el codigo compara sin tildes. ---
+// Las claves son los valores del dato (los valida el CHECK de la base): NO se tocan.
+// Lo que ve el usuario sale de estos mapas; si falta una clave, se muestra el valor crudo.
+export const rotuloEstadoUnidad: Record<EstadoUnidad, string> = {
+  disponible: "disponible",
+  reservada: "reservada",
+  seniada: "señada",
+  "en preparacion": "en preparación",
+  vendida: "vendida",
+}
+export const rotuloSegmento: Record<string, string> = {
+  todos: "todos",
+  hatch: "hatch",
+  sedan: "sedán",
+  suv: "suv",
+  pickup: "pickup",
+  utilitario: "utilitario",
+  electrico: "eléctrico",
+}
+export const rotuloCaja: Record<string, string> = {
+  manual: "manual",
+  automatica: "automática",
+  CVT: "CVT",
+  directa: "directa",
+}
+export const rotuloCombustible: Record<string, string> = {
+  nafta: "nafta",
+  diesel: "diésel",
+  hibrido: "híbrido",
+  electrico: "eléctrico",
+}
+export const rotuloCanal: Record<string, string> = {
+  showroom: "showroom",
+  portal: "portal",
+  web: "web",
+  whatsapp: "whatsapp",
+  referido: "referido",
+  telefono: "teléfono",
+}
+
 // --- Etapas del embudo. El ancho del trapecio es el dato; el color es la etapa. ---
 export type Etapa = "consulta" | "contactado" | "test drive" | "cotizacion" | "senia" | "entrega"
 
@@ -84,7 +124,7 @@ export const rotuloEtapa: Record<Etapa, string> = {
   consulta: "Consulta",
   contactado: "Contactado",
   "test drive": "Test drive",
-  cotizacion: "Cotizacion",
+  cotizacion: "Cotización",
   senia: "Seña",
   entrega: "Entrega",
 }

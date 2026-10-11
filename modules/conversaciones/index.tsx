@@ -72,7 +72,7 @@ export function ConversacionesPage() {
                   {hilo.unidad} · <span className="chip bg-subtle text-muted">{hilo.canal}</span>
                 </p>
               </div>
-              <div tabIndex={0} role="log" aria-label={`Conversacion con ${hilo.cliente}`} className="flex-1 space-y-2 overflow-y-auto p-4">
+              <div tabIndex={0} role="log" aria-label={`Conversación con ${hilo.cliente}`} className="flex-1 space-y-2 overflow-y-auto p-4">
                 {hilo.mensajes.map((m) => (
                   <div key={m.id} className={"flex " + (m.de === "vendedor" ? "justify-end" : "justify-start")}>
                     <div
@@ -94,13 +94,13 @@ export function ConversacionesPage() {
                 <input
                   disabled
                   aria-label="Escribir una respuesta (demo, no conectado)"
-                  placeholder="Demo frontend: el envio no esta conectado"
+                  placeholder="Demo frontend: el envío no está conectado"
                   className="w-full rounded border border-border bg-subtle px-3 py-1.5 text-xs text-muted outline-none"
                 />
               </div>
             </>
           ) : (
-            <p className="py-20 text-center text-xs text-muted">Elegi un hilo.</p>
+            <p className="py-20 text-center text-xs text-muted">Elegí un hilo.</p>
           )}
         </div>
       </div>

@@ -23,7 +23,7 @@
       "monto": 37400,
       "permuta": null,
       "diasSinContacto": 2,
-      "proximoPaso": "Enviar ficha tecnica",
+      "proximoPaso": "Enviar ficha técnica",
       "vendedor": "Facundo Ibarra"
     },
     {
@@ -66,7 +66,7 @@
       "monto": 13200,
       "permuta": null,
       "diasSinContacto": 4,
-      "proximoPaso": "Confirmar interes",
+      "proximoPaso": "Confirmar interés",
       "vendedor": "Facundo Ibarra"
     },
     {
@@ -109,7 +109,7 @@
       "monto": 25400,
       "permuta": null,
       "diasSinContacto": 11,
-      "proximoPaso": "Lead frio: ultima llamada",
+      "proximoPaso": "Lead frío: última llamada",
       "vendedor": "Renata Villalba"
     },
     {
@@ -121,12 +121,12 @@
       "etapa": "contactado",
       "monto": 30900,
       "permuta": {
-        "modelo": "MARLO Randa Furgon",
+        "modelo": "MARLO Randa Furgón",
         "anio": 2014,
         "toma": 9200
       },
       "diasSinContacto": 2,
-      "proximoPaso": "Enviar cotizacion de toma",
+      "proximoPaso": "Enviar cotización de toma",
       "vendedor": "Facundo Ibarra"
     },
     {
@@ -169,7 +169,7 @@
       "monto": 33100,
       "permuta": null,
       "diasSinContacto": 8,
-      "proximoPaso": "No confirmo la prueba",
+      "proximoPaso": "No confirmó la prueba",
       "vendedor": "Renata Villalba"
     },
     {

@@ -72,7 +72,7 @@ export function DashboardPage() {
               Precio contra kilometraje · unidades usadas
             </h2>
             <p className="text-[0.625rem] text-muted">
-              tamaño del punto = dias en stock · sobre la banda = precio por encima de la referencia
+              tamaño del punto = días en stock · sobre la banda = precio por encima de la referencia
             </p>
           </div>
           {usados.length ? (
@@ -104,9 +104,9 @@ export function DashboardPage() {
         {/* 1x2 — la playa por antiguedad: plata quieta */}
         <div className="surface-card p-4 lg:row-span-2">
           <h2 className="mb-2 font-heading text-[0.6875rem] font-bold uppercase tracking-widest text-muted">
-            Unidades con mayor antiguedad
+            Unidades con mayor antigüedad
           </h2>
-          <ul tabIndex={0} aria-label="Unidades con mayor antiguedad" className="max-h-[26rem] space-y-2 overflow-y-auto pr-1">
+          <ul tabIndex={0} aria-label="Unidades con mayor antigüedad" className="max-h-[26rem] space-y-2 overflow-y-auto pr-1">
             {playa.map((u) => (
               <li key={u.id} className="border-b border-border pb-2 last:border-0">
                 <p className="truncate font-heading text-xs font-semibold">
@@ -116,7 +116,7 @@ export function DashboardPage() {
                   <span>{fmtKm(u.km)}</span>
                   <span className="precio text-fg">{usd(u.precio)}</span>
                 </p>
-                <span className={"chip mt-1 " + chipAging[nivelDeAging(u.diasPlaya)]}>{u.diasPlaya} dias</span>
+                <span className={"chip mt-1 " + chipAging[nivelDeAging(u.diasPlaya)]}>{u.diasPlaya} días</span>
               </li>
             ))}
             {!playa.length && <li className="h-40 animate-pulse rounded bg-subtle" />}

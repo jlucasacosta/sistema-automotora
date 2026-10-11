@@ -18,13 +18,13 @@
         {
           "id": "m2",
           "de": "vendedor",
-          "texto": "Hola Camila, si, sigue disponible. Esta en playa, lo podes ver hoy mismo.",
+          "texto": "Hola Camila, sí, sigue disponible. Está en playa, lo podés ver hoy mismo.",
           "hora": "09:20"
         },
         {
           "id": "m3",
           "de": "cliente",
-          "texto": "¿Cual es el precio final? En el portal figura US$ 39.500",
+          "texto": "¿Cuál es el precio final? En el portal figura US$ 39.500",
           "hora": "09:28"
         },
         {
@@ -42,7 +42,7 @@
         {
           "id": "m6",
           "de": "cliente",
-          "texto": "Tiene 118.000 km y esta al dia con la VTV.",
+          "texto": "Tiene 118.000 km y está al día con la VTV.",
           "hora": "09:42"
         }
       ]
@@ -52,14 +52,14 @@
       "cliente": "Tomas Escalante",
       "unidad": "ZEFIR Cobre E Long Range",
       "canal": "web",
-      "ultimo": "¿Cuanta autonomia real tiene?",
+      "ultimo": "¿Cuánta autonomía real tiene?",
       "hora": "09:15",
       "sinLeer": 1,
       "mensajes": [
         {
           "id": "m1",
           "de": "cliente",
-          "texto": "Buenas, me interesa el electrico.",
+          "texto": "Buenas, me interesa el eléctrico.",
           "hora": "09:02"
         },
         {
@@ -71,7 +71,7 @@
         {
           "id": "m3",
           "de": "cliente",
-          "texto": "¿Cuanta autonomia real tiene?",
+          "texto": "¿Cuánta autonomía real tiene?",
           "hora": "09:15"
         }
       ]
@@ -88,7 +88,7 @@
         {
           "id": "m1",
           "de": "vendedor",
-          "texto": "Ariadna, te reservo el Tilo hasta el viernes?",
+          "texto": "Ariadna, ¿te reservo el Tilo hasta el viernes?",
           "hora": "ayer"
         },
         {
@@ -104,14 +104,14 @@
       "cliente": "Bruno Lattanzio",
       "unidad": "KERO Sable Cross 0km",
       "canal": "whatsapp",
-      "ultimo": "¿Que cuota queda a 48 meses?",
+      "ultimo": "¿Qué cuota queda a 48 meses?",
       "hora": "08:51",
       "sinLeer": 1,
       "mensajes": [
         {
           "id": "m1",
           "de": "cliente",
-          "texto": "Vengo del showroom. ¿Que cuota queda a 48 meses?",
+          "texto": "Vengo del showroom. ¿Qué cuota queda a 48 meses?",
           "hora": "08:51"
         }
       ]
@@ -151,7 +151,7 @@
         {
           "id": "m1",
           "de": "vendedor",
-          "texto": "Ignacio, seguis interesado en el Ferro?",
+          "texto": "Ignacio, ¿seguís interesado en el Ferro?",
           "hora": "hace 11 d"
         }
       ]
@@ -161,14 +161,14 @@
       "cliente": "Delfina Grispo",
       "unidad": "MARLO Randa 1.6 Pack",
       "canal": "whatsapp",
-      "ultimo": "Mandame la cotizacion de la toma",
+      "ultimo": "Mandame la cotización de la toma",
       "hora": "ayer",
       "sinLeer": 1,
       "mensajes": [
         {
           "id": "m1",
           "de": "cliente",
-          "texto": "Mandame la cotizacion de la toma",
+          "texto": "Mandame la cotización de la toma",
           "hora": "ayer"
         }
       ]
@@ -218,20 +218,20 @@
       "cliente": "Valentina Ocampo",
       "unidad": "KERO Sable 2.0 4x4 Limited",
       "canal": "web",
-      "ultimo": "¿Me pasas dos opciones mas del mismo segmento?",
+      "ultimo": "¿Me pasás dos opciones más del mismo segmento?",
       "hora": "10:22",
       "sinLeer": 2,
       "mensajes": [
         {
           "id": "m1",
           "de": "cliente",
-          "texto": "Me gusto el 4x4 pero se me va de presupuesto.",
+          "texto": "Me gustó el 4x4 pero se me va de presupuesto.",
           "hora": "10:18"
         },
         {
           "id": "m2",
           "de": "cliente",
-          "texto": "¿Me pasas dos opciones mas del mismo segmento?",
+          "texto": "¿Me pasás dos opciones más del mismo segmento?",
           "hora": "10:22"
         }
       ]
@@ -241,7 +241,7 @@
       "cliente": "Lautaro Bidegain",
       "unidad": "ALVA Vela 1.4 Comfort",
       "canal": "portal",
-      "ultimo": "Se me complico el credito",
+      "ultimo": "Se me complicó el crédito",
       "hora": "hace 6 d",
       "sinLeer": 0,
       "mensajes": [
@@ -254,7 +254,7 @@
         {
           "id": "m2",
           "de": "cliente",
-          "texto": "Se me complico el credito",
+          "texto": "Se me complicó el crédito",
           "hora": "hace 6 d"
         }
       ]
@@ -281,14 +281,14 @@
       "cliente": "Sofia Etchegaray",
       "unidad": "MARLO Randa Cargo Max",
       "canal": "whatsapp",
-      "ultimo": "¿Cuando esta el patentamiento?",
+      "ultimo": "¿Cuándo está el patentamiento?",
       "hora": "11:40",
       "sinLeer": 1,
       "mensajes": [
         {
           "id": "m1",
           "de": "cliente",
-          "texto": "¿Cuando esta el patentamiento?",
+          "texto": "¿Cuándo está el patentamiento?",
           "hora": "11:40"
         }
       ]

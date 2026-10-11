@@ -4,6 +4,10 @@ import { RotateCcw, Fuel, Cog, Calendar, Palette } from "lucide-react"
 import { getUnidades, desvioPct, type Unidad, type Segmento } from "./api"
 import {
   chipUnidad,
+  rotuloEstadoUnidad,
+  rotuloSegmento,
+  rotuloCaja,
+  rotuloCombustible,
   chipAging,
   nivelDeAging,
   chipBanda,
@@ -60,9 +64,9 @@ export function CatalogoPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Catalogo</h1>
+        <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Catálogo</h1>
         <p className="text-[0.6875rem] text-muted">
-          Elegi una unidad de la lista para verla en detalle. Hace click en la ficha para ver los datos tecnicos.
+          Elegí una unidad de la lista para verla en detalle. Hacé click en la ficha para ver los datos técnicos.
         </p>
       </div>
 
@@ -79,7 +83,7 @@ export function CatalogoPage() {
               (segmento === s ? "bg-primary text-bg" : "bg-subtle text-muted hover:text-fg")
             }
           >
-            {s}
+            {rotuloSegmento[s] ?? s}
           </button>
         ))}
         <span className="dato ml-auto text-[0.625rem] text-muted">{visibles.length} unidades</span>
@@ -109,7 +113,7 @@ export function CatalogoPage() {
                       <h2 className="font-heading text-3xl font-bold leading-none">{tope.modelo}</h2>
                       <p className="mt-1 text-xs text-muted">{tope.version}</p>
                     </div>
-                    <span className={"chip " + chipUnidad[tope.estado]}>{tope.estado}</span>
+                    <span className={"chip " + chipUnidad[tope.estado]}>{rotuloEstadoUnidad[tope.estado] ?? tope.estado}</span>
                   </div>
 
                   <p className="patente mt-5 inline-block rounded border border-border bg-subtle px-3 py-1.5 text-sm">
@@ -135,10 +139,10 @@ export function CatalogoPage() {
                   </div>
                   <button
                     type="button"
-                    aria-label={`Ver datos tecnicos de ${tope.marca} ${tope.modelo}`}
+                    aria-label={`Ver datos técnicos de ${tope.marca} ${tope.modelo}`}
                     className="chip-btn mt-3 flex items-center gap-1 text-[0.625rem] uppercase tracking-widest text-muted"
                   >
-                    <RotateCcw size={11} strokeWidth={2.5} /> ver datos tecnicos
+                    <RotateCcw size={11} strokeWidth={2.5} /> ver datos técnicos
                   </button>
                 </div>
               </div>
@@ -150,16 +154,16 @@ export function CatalogoPage() {
                 className="deck-cara deck-dorso surface-card absolute inset-0 border border-primary/50 p-5"
               >
                 {/* accent, no primary: el violeta da 3.4:1 sobre la tarjeta y no sirve como texto */}
-                <h3 className="font-heading text-sm font-bold uppercase tracking-widest text-accent">Ficha tecnica</h3>
+                <h3 className="font-heading text-sm font-bold uppercase tracking-widest text-accent">Ficha técnica</h3>
                 <p className="mb-3 text-[0.625rem] text-muted">
                   {tope.marca} {tope.modelo} {tope.version}
                 </p>
                 <Spec icon={Cog} label="Motor" valor={tope.motor} />
-                <Spec icon={Cog} label="Caja" valor={tope.caja} />
-                <Spec icon={Fuel} label="Combustible" valor={tope.combustible} />
+                <Spec icon={Cog} label="Caja" valor={rotuloCaja[tope.caja] ?? tope.caja} />
+                <Spec icon={Fuel} label="Combustible" valor={rotuloCombustible[tope.combustible] ?? tope.combustible} />
                 <Spec icon={Calendar} label="Año" valor={String(tope.anio)} />
                 <Spec icon={Palette} label="Color" valor={tope.color} />
-                <Spec icon={Cog} label="Segmento" valor={tope.segmento} />
+                <Spec icon={Cog} label="Segmento" valor={rotuloSegmento[tope.segmento] ?? tope.segmento} />
                 <button
                   type="button"
                   aria-label="Volver al frente de la ficha"
@@ -176,7 +180,7 @@ export function CatalogoPage() {
             <h3 className="mb-2 font-heading text-[0.6875rem] font-bold uppercase tracking-widest text-muted">
               Unidades · {visibles.length}
             </h3>
-            <ul tabIndex={0} aria-label="Unidades del catalogo" className="grid max-h-[19rem] gap-1.5 overflow-y-auto pr-1 sm:grid-cols-2">
+            <ul tabIndex={0} aria-label="Unidades del catálogo" className="grid max-h-[19rem] gap-1.5 overflow-y-auto pr-1 sm:grid-cols-2">
               {visibles.map((u) => {
                 const activa = u.id === tope.id
                 return (

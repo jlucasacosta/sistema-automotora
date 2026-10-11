@@ -52,7 +52,7 @@ function rgb(hex: string) {
 // Cada ruta aporta su titulo (export const metadata en app/<ruta>/page.tsx): "Pipeline · VERTICE".
 export const metadata = {
   title: { default: `${theme.brand.name} · Sistema para automotoras`, template: `%s · ${theme.brand.name}` },
-  description: "Demo frontend de un sistema de gestion para concesionarias. Datos de ejemplo, sin backend conectado.",
+  description: "Demo frontend de un sistema de gestión para concesionarias. Datos de ejemplo, sin backend conectado.",
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

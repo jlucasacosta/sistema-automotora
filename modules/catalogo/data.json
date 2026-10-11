@@ -124,7 +124,7 @@
       "motor": "2.8 TDi",
       "caja": "manual",
       "combustible": "diesel",
-      "color": "Plata volcan"
+      "color": "Plata volcán"
     },
     {
       "id": "U-108",
@@ -220,7 +220,7 @@
       "id": "U-113",
       "marca": "MARLO",
       "modelo": "Randa",
-      "version": "Furgon 1.6",
+      "version": "Furgón 1.6",
       "anio": 2019,
       "km": 129400,
       "precio": 18900,
@@ -358,7 +358,7 @@
       "motor": "2.8 TDi",
       "caja": "automatica",
       "combustible": "diesel",
-      "color": "Plata volcan"
+      "color": "Plata volcán"
     },
     {
       "id": "U-121",
@@ -520,7 +520,7 @@
       "motor": "150 kW",
       "caja": "directa",
       "combustible": "electrico",
-      "color": "Plata volcan"
+      "color": "Plata volcán"
     },
     {
       "id": "U-130",

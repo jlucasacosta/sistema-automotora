@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import { getLeads, type Lead, type Canal } from "./api"
-import { chipLead, nivelDeLead, usd } from "@/shell/automotora"
+import { chipLead, nivelDeLead, rotuloCanal, usd } from "@/shell/automotora"
 
 // tabla-densa: el CRM de leads. Arquetipo de soporte, no el protagonista del sistema.
 // El protagonista es el embudo. Aca el vendedor escanea filas buscando al que se enfria.
@@ -41,25 +41,25 @@ export function ContactosPage() {
         </div>
         <input
           type="search"
-          aria-label="Buscar contactos por nombre o interes"
+          aria-label="Buscar contactos por nombre o interés"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Buscar por nombre o interes"
+          placeholder="Buscar por nombre o interés"
           className="w-full rounded border border-muted/70 bg-surface px-3 py-1.5 text-xs text-fg placeholder:text-muted focus:border-primary sm:w-64"
         />
       </div>
 
       <div role="region" aria-label="Tabla de contactos" tabIndex={0} className="surface-card overflow-x-auto">
         <table className="w-full min-w-[56rem] text-left">
-          <caption className="sr-only">Contactos con canal, interes, presupuesto y dias desde el ultimo contacto</caption>
+          <caption className="sr-only">Contactos con canal, interés, presupuesto y días desde el último contacto</caption>
           <thead>
             <tr className="border-b border-border text-[0.625rem] uppercase tracking-widest text-muted">
               <th scope="col" className="px-3 py-2 font-medium">Lead</th>
               <th scope="col" className="px-3 py-2 font-medium">Contacto</th>
               <th scope="col" className="px-3 py-2 font-medium">Canal</th>
-              <th scope="col" className="px-3 py-2 font-medium">Interes</th>
+              <th scope="col" className="px-3 py-2 font-medium">Interés</th>
               <th scope="col" className="px-3 py-2 text-right font-medium">Presupuesto</th>
-              <th scope="col" className="px-3 py-2 font-medium">Ultimo contacto</th>
+              <th scope="col" className="px-3 py-2 font-medium">Último contacto</th>
               <th scope="col" className="px-3 py-2 font-medium">Vendedor</th>
             </tr>
           </thead>
@@ -79,7 +79,7 @@ export function ContactosPage() {
                   <p className="truncate text-[0.625rem] text-muted">{l.email}</p>
                 </td>
                 <td className="px-3 py-1.5">
-                  <span className={"chip " + chipCanal[l.canal]}>{l.canal}</span>
+                  <span className={"chip " + chipCanal[l.canal]}>{rotuloCanal[l.canal] ?? l.canal}</span>
                 </td>
                 <td className="px-3 py-1.5 text-[0.6875rem] text-muted">{l.interes}</td>
                 <td className="precio px-3 py-1.5 text-right text-xs">{usd(l.presupuesto)}</td>

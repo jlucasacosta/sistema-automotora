@@ -105,7 +105,9 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
       </svg>
 
       {/* Los mismos datos del grafico, para lector de pantalla: el color solo no alcanza. */}
-      <table className="sr-only">
+      {/* El sr-only va en un div: en una <table> el ancho de 1px se ignora y la tabla ensancha la página en mobile. */}
+      <div className="sr-only">
+      <table>
         <caption>Unidades usadas: precio, kilometraje, días en stock y posición respecto de la banda de referencia</caption>
         <thead>
           <tr>
@@ -131,6 +133,7 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
           ))}
         </tbody>
       </table>
+      </div>
     </>
   )
 }

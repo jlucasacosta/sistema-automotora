@@ -69,14 +69,16 @@ export function CatalogoPage() {
   )
 
   const visibles = useMemo(() => {
-    const t = q.trim().toLowerCase()
+    // Sin tildes ni mayúsculas: "senada" encuentra "señada".
+    const sinTildes = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase()
+    const t = sinTildes(q.trim())
     const lista = unidades.filter((u) => {
       if (estado === "en playa" ? u.estado === "vendida" : u.estado !== estado) return false
       if (segmento !== "todos" && u.segmento !== segmento) return false
       if (condicion === "0km" && u.km !== 0) return false
       if (condicion === "usados" && u.km === 0) return false
       if (!t) return true
-      return `${u.id} ${u.marca} ${u.modelo} ${u.version} ${u.patente ?? ""}`.toLowerCase().includes(t)
+      return sinTildes(`${u.id} ${u.marca} ${u.modelo} ${u.version} ${u.patente ?? ""}`).includes(t)
     })
     if (orden === "antiguas") lista.sort((a, b) => b.diasPlaya - a.diasPlaya)
     if (orden === "precio-menor") lista.sort((a, b) => a.precio - b.precio)

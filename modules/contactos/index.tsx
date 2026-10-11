@@ -37,8 +37,10 @@ export function ContactosPage() {
   const esCliente = (l: Lead) => !!clientes?.has(l.nombre)
 
   const visibles = useMemo(() => {
-    const t = q.trim().toLowerCase()
-    return leads.filter((l) => !t || `${l.id} ${l.nombre} ${l.interes}`.toLowerCase().includes(t))
+    // Sin tildes ni mayúsculas: "tomas" encuentra a "Tomás".
+    const sinTildes = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase()
+    const t = sinTildes(q.trim())
+    return leads.filter((l) => !t || sinTildes(`${l.id} ${l.nombre} ${l.interes}`).includes(t))
   }, [leads, q])
   const frios = leads.filter((l) => !esCliente(l) && nivelDeLead(l.diasSinContacto) === "frio").length
 

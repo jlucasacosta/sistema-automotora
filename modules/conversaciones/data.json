@@ -49,7 +49,7 @@
     },
     {
       "id": "H-02",
-      "cliente": "Tomas Escalante",
+      "cliente": "Tomás Escalante",
       "unidad": "ZEFIR Cobre E Long Range",
       "canal": "web",
       "ultimo": "¿Cuánta autonomía real tiene?",
@@ -65,7 +65,7 @@
         {
           "id": "m2",
           "de": "vendedor",
-          "texto": "Hola Tomas. Es un 150 kW, 2023, 12.600 km.",
+          "texto": "Hola Tomás. Es un 150 kW, 2023, 12.600 km.",
           "hora": "09:09"
         },
         {
@@ -118,7 +118,7 @@
     },
     {
       "id": "H-05",
-      "cliente": "Joaquin Bentancor",
+      "cliente": "Joaquín Bentancor",
       "unidad": "NORVIK Talud Limited 4x4",
       "canal": "portal",
       "ultimo": "Llevo la pickup el jueves para tasar",
@@ -128,7 +128,7 @@
         {
           "id": "m1",
           "de": "vendedor",
-          "texto": "Joaquin, para tomarte la pickup necesito verla.",
+          "texto": "Joaquín, para tomarte la pickup necesito verla.",
           "hora": "08:22"
         },
         {
@@ -175,7 +175,7 @@
     },
     {
       "id": "H-08",
-      "cliente": "Santiago Roldan",
+      "cliente": "Santiago Roldán",
       "unidad": "VANTEL Brio Sport",
       "canal": "whatsapp",
       "ultimo": "Confirmo la prueba de manejo 16:30",
@@ -198,7 +198,7 @@
     },
     {
       "id": "H-09",
-      "cliente": "Gaston Uriburu",
+      "cliente": "Gastón Uriburu",
       "unidad": "TESSARI Lume Sport",
       "canal": "portal",
       "ultimo": "No pude ir, disculpas",
@@ -278,7 +278,7 @@
     },
     {
       "id": "H-13",
-      "cliente": "Sofia Etchegaray",
+      "cliente": "Sofía Etchegaray",
       "unidad": "MARLO Randa Cargo Max",
       "canal": "whatsapp",
       "ultimo": "¿Cuándo está el patentamiento?",

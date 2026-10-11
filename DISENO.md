@@ -37,7 +37,9 @@ Lo que se rompe si el dato llega tarde: la **unidad vendida dos veces** (dos ven
 - danger `#FB5C4C` — **escarlata, corregido**. El `#F87171` original (salmón) se confundía con el accent magenta en el reel, y el frame-firma tiene una seña vencida parpadeando al lado de chips magenta
 - info `#38BDF8` — 0km, en preparación
 
-`primary` a 3.4:1 sobre `bg` **no sirve como texto**: va solo como fill (riel de KPI, aguja del odómetro, pill de nav activo con `text-bg` encima).
+`primary` **no sirve como texto** sobre las tarjetas: va solo como fill (riel de KPI, aguja del odómetro, pill de nav activo con `text-bg` encima).
+
+> **Ajuste de auditoría (Impeccable):** `primary` pasó de `#7B61FF` a `#7E64FF` (mismo matiz, apenas más claro) para que el texto `bg` encima del fill (pill de nav activo, chips-filtro activos, inicial de la marca) llegue a 4.5:1 (4.41 → 4.55). Y los chips `accent` y `danger` bajaron su tinte de fondo (`/20` y `/15` → `/10`) por el mismo motivo. La identidad no cambia.
 
 ## Módulos → arquetipo
 | Módulo | Arquetipo | Qué es |

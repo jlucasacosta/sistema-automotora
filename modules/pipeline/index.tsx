@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react"
 import { ArrowLeftRight, Repeat2, AlertTriangle } from "lucide-react"
 import { getDeals, moverDeal, type Deal } from "./api"
 import { getUnidades, type Unidad } from "@/modules/catalogo/api"
@@ -41,39 +41,63 @@ function Ficha({
   unidad,
   onDragStart,
   onSeleccionar,
+  onMover,
   seleccionado,
 }: {
   d: Deal
   unidad?: Unidad
   onDragStart: () => void
   onSeleccionar: () => void
+  onMover: (paso: -1 | 1) => void
   seleccionado: boolean
 }) {
   const lead = nivelDeLead(d.diasSinContacto)
   const sena = d.senaDias !== undefined ? nivelDeSena(d.senaDias) : null
 
+  // Teclado: Enter/Espacio elige la ficha (alimenta el comparador); las flechas la mueven de etapa.
+  // Es la alternativa al arrastre (WCAG 2.5.7). El arrastre con mouse sigue igual.
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault()
+      onSeleccionar()
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault()
+      onMover(1)
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault()
+      onMover(-1)
+    }
+  }
+
   return (
-    <li
+    <li>
+    <div
+      id={`ficha-${d.id}`}
+      role="button"
+      tabIndex={0}
+      aria-pressed={seleccionado}
+      aria-keyshortcuts="ArrowLeft ArrowRight"
       draggable
       onDragStart={onDragStart}
       onClick={onSeleccionar}
+      onKeyDown={onKeyDown}
       className={
-        "avanzando cursor-grab rounded border border-border bg-surface p-2 text-left transition-colors active:cursor-grabbing " +
+        "avanzando block cursor-grab rounded border border-border bg-surface p-2 text-left transition-colors active:cursor-grabbing " +
         (sena ? "border-l-[3px] " + bordeSena[sena] + " " : "") +
         (sena === "vencida" ? "sena-vencida " : "") +
         (seleccionado ? "ring-1 ring-primary" : "hover:border-primary/60")
       }
     >
-      <p className="truncate font-heading text-xs font-semibold">{d.cliente}</p>
-      <p className="truncate text-[10px] text-muted">
+      <span className="block truncate font-heading text-xs font-semibold">{d.cliente}</span>
+      <span className="block truncate text-[0.625rem] text-muted">
         {unidad ? `${unidad.marca} ${unidad.modelo} ${unidad.anio}` : d.unidadId}
-      </p>
-      <p className="patente mt-1 inline-block rounded bg-subtle px-1 py-px text-[9px]">
+      </span>
+      <span className="patente mt-1 inline-block rounded bg-subtle px-1 py-px text-[0.625rem]">
         {unidad?.patente ?? "SIN PATENTAR"}
-      </p>
-      <p className="precio mt-1 text-base leading-none">{usd(d.monto)}</p>
+      </span>
+      <span className="precio mt-1 block text-base leading-none">{usd(d.monto)}</span>
 
-      <div className="mt-1.5 flex flex-wrap gap-1">
+      <span className="mt-1.5 flex flex-wrap gap-1">
         <span className={"chip " + chipLead[lead]}>
           {d.diasSinContacto === 0 ? "hoy" : `${d.diasSinContacto} d sin contacto`}
         </span>
@@ -82,12 +106,12 @@ function Ficha({
             <Repeat2 size={10} strokeWidth={2.5} /> permuta {usd(d.permuta.toma)}
           </span>
         )}
-      </div>
+      </span>
 
       {sena && (
-        <p
+        <span
           className={
-            "dato mt-1.5 flex items-center gap-1 text-[10px] font-semibold " +
+            "dato mt-1.5 flex items-center gap-1 text-[0.625rem] font-semibold " +
             (sena === "vencida" ? "text-danger" : sena === "por-vencer" ? "text-warning" : "text-success")
           }
         >
@@ -95,8 +119,9 @@ function Ficha({
           {sena === "vencida"
             ? `Seña vencio hace ${Math.abs(d.senaDias as number)} dias`
             : `Seña vence en ${d.senaDias} dias`}
-        </p>
+        </span>
       )}
+    </div>
     </li>
   )
 }
@@ -108,6 +133,8 @@ export function PipelinePage() {
   const [sobre, setSobre] = useState<Etapa | null>(null)
   const [seleccionado, setSeleccionado] = useState<string | null>(null)
   const [entregadasHoy, setEntregadasHoy] = useState(3)
+  const [aviso, setAviso] = useState("") // anuncio para lectores de pantalla (aria-live)
+  const foco = useRef<string | null>(null) // ficha que recupera el foco despues de moverse
 
   useEffect(() => {
     getDeals().then((ds) => {
@@ -123,18 +150,37 @@ export function PipelinePage() {
     return (id: string) => m.get(id)
   }, [unidades])
 
+  // Despues de mover una ficha con teclado, la ficha se re-monta en otra etapa: se le devuelve el foco.
+  useEffect(() => {
+    if (!foco.current) return
+    document.getElementById(`ficha-${foco.current}`)?.focus()
+    foco.current = null
+  }, [deals])
+
   const porEtapa = (e: Etapa) => deals.filter((d) => d.etapa === e)
   const total = deals.length || 1
 
-  const soltarEn = (e: Etapa) => {
-    if (!arrastrado) return
-    const d = deals.find((x) => x.id === arrastrado)
+  // Mover una ficha es una sola operacion: la usan el arrastre (mouse) y las flechas (teclado).
+  const moverFicha = (id: string, e: Etapa) => {
+    const d = deals.find((x) => x.id === id)
     if (!d || d.etapa === e) return
     moverDeal(d.id, e)
-    setDeals((ds) => ds.map((x) => (x.id === arrastrado ? { ...x, etapa: e } : x)))
+    setDeals((ds) => ds.map((x) => (x.id === id ? { ...x, etapa: e } : x)))
     if (e === "entrega") setEntregadasHoy((n) => n + 1)
+    setAviso(`${d.cliente} paso a ${rotuloEtapa[e]}`)
+  }
+
+  const soltarEn = (e: Etapa) => {
+    if (arrastrado) moverFicha(arrastrado, e)
     setArrastrado(null)
     setSobre(null)
+  }
+
+  const moverConTeclado = (d: Deal, paso: -1 | 1) => {
+    const destino = ETAPAS[ETAPAS.indexOf(d.etapa) + paso]
+    if (!destino) return
+    foco.current = d.id
+    moverFicha(d.id, destino)
   }
 
   const dealSel = deals.find((d) => d.id === seleccionado)
@@ -153,23 +199,28 @@ export function PipelinePage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Pipeline</h1>
-          <p className="text-[11px] text-muted">
-            El ancho de cada etapa es la cantidad de oportunidades. Arrastra una ficha para avanzarla.
+          <p className="text-[0.6875rem] text-muted">
+            El ancho de cada etapa es la cantidad de oportunidades. Arrastra una ficha para avanzarla, o elegila con el
+            teclado y movela con las flechas izquierda y derecha.
           </p>
         </div>
         <div className="flex gap-6">
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-muted">Valor del pipeline</p>
+            <p className="text-[0.625rem] uppercase tracking-widest text-muted">Valor del pipeline</p>
             <p className="precio text-xl text-fg">{usd(valorEmbudo)}</p>
           </div>
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-muted">Entregadas hoy</p>
+            <p className="text-[0.625rem] uppercase tracking-widest text-muted">Entregadas hoy</p>
             <p className="precio text-xl text-success">{entregadasHoy}</p>
           </div>
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      <p role="status" aria-live="polite" className="sr-only">
+        {aviso}
+      </p>
+
+      <div role="region" aria-label="Embudo de oportunidades por etapa" tabIndex={0} className="overflow-x-auto">
         <div className="flex min-w-[64rem] gap-1">
           {ETAPAS.map((e, i) => {
             const items = porEtapa(e)
@@ -194,11 +245,11 @@ export function PipelinePage() {
                 <div className="relative h-[4.5rem] overflow-hidden rounded">
                   <Trapecio etapa={e} i={i} />
                   <div className="relative flex h-full flex-col items-center justify-center px-1 text-center">
-                    <p className="truncate font-heading text-[10px] font-bold uppercase tracking-widest text-fg">
+                    <h2 className="truncate font-heading text-[0.625rem] font-bold uppercase tracking-widest text-fg">
                       {rotuloEtapa[e]}
-                    </p>
+                    </h2>
                     <p className="precio text-2xl leading-none text-fg">{items.length}</p>
-                    <p className="dato text-[9px] text-fg/70">{conversion}% conv.</p>
+                    <p className="dato text-[0.625rem] text-fg">{conversion}% conv.</p>
                   </div>
                 </div>
 
@@ -215,11 +266,12 @@ export function PipelinePage() {
                       unidad={unidadDe(d.unidadId)}
                       onDragStart={() => setArrastrado(d.id)}
                       onSeleccionar={() => setSeleccionado(d.id)}
+                      onMover={(paso) => moverConTeclado(d, paso)}
                       seleccionado={seleccionado === d.id}
                     />
                   ))}
                   {!items.length && (
-                    <li className="py-6 text-center text-[9px] uppercase tracking-widest text-muted">sin oportunidades</li>
+                    <li className="py-6 text-center text-[0.625rem] uppercase tracking-widest text-muted">sin oportunidades</li>
                   )}
                 </ul>
               </div>

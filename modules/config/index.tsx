@@ -1,4 +1,3 @@
-"use client"
 import { theme } from "@/shell/theme"
 
 // form-secciones: paneles de seccion planos, uno debajo del otro. Dentro del mismo
@@ -8,8 +7,8 @@ import { theme } from "@/shell/theme"
 function Fila({ label, value, swatch }: { label: string; value: string; swatch?: boolean }) {
   return (
     <div className="flex items-center justify-between border-b border-border py-1.5 last:border-0">
-      <span className="text-[11px] text-muted">{label}</span>
-      <span className="dato flex items-center gap-2 text-[11px] font-medium">
+      <span className="text-[0.6875rem] text-muted">{label}</span>
+      <span className="dato flex items-center gap-2 text-[0.6875rem] font-medium">
         {swatch && <span className="h-4 w-4 rounded border border-border" style={{ background: value }} />}
         {value}
       </span>
@@ -21,7 +20,7 @@ function Seccion({ titulo, children, nota }: { titulo: string; children: React.R
   return (
     <section className="surface-card p-4">
       <h2 className="font-heading text-xs font-bold uppercase tracking-widest">{titulo}</h2>
-      {nota && <p className="mb-2 mt-1 text-[10px] leading-snug text-muted">{nota}</p>}
+      {nota && <p className="mb-2 mt-1 text-[0.625rem] leading-snug text-muted">{nota}</p>}
       <div className="mt-2">{children}</div>
     </section>
   )
@@ -54,10 +53,11 @@ export function ConfigPage() {
 
         <Seccion
           titulo="Corredor de precio"
-          nota="El scatter precio x km dibuja la banda con estos cuatro numeros: ref(km) = base - caida x km."
+          nota="El scatter precio x km dibuja la banda con estos numeros: ref(km) = max(base - caida x km, piso)."
         >
           <Fila label="Precio base (0 km)" value={`US$ ${theme.banda.base.toLocaleString("es-AR")}`} />
           <Fila label="Caida por km" value={`US$ ${theme.banda.caida} / km`} />
+          <Fila label="Piso de referencia" value={`US$ ${theme.banda.piso.toLocaleString("es-AR")}`} />
           <Fila label="Oportunidad por debajo de" value={`${theme.banda.oportunidad}%`} />
           <Fila label="Sobrevaluada por encima de" value={`+${theme.banda.sobre}%`} />
         </Seccion>
@@ -73,7 +73,7 @@ export function ConfigPage() {
           <Fila label="Cuerpo" value={theme.font.body} />
         </Seccion>
 
-        <Seccion titulo="Paleta" nota="El violeta no se usa como texto: no llega a 4.5:1 sobre el fondo. Va solo como relleno.">
+        <Seccion titulo="Paleta" nota="El violeta no se usa como texto: sobre las tarjetas no llega a 4.5:1. Va solo como relleno.">
           <Fila label="Violeta electrico (primario, fill)" value={c.primary} swatch />
           <Fila label="Magenta neon (acento)" value={c.accent} swatch />
           <Fila label="Entregada / seña vigente" value={c.success} swatch />
@@ -86,12 +86,12 @@ export function ConfigPage() {
           <div className="flex flex-wrap gap-2 pt-1">
             <span className="chip bg-primary/20 text-fg">disponible</span>
             <span className="chip bg-warning/15 text-warning">reservada</span>
-            <span className="chip bg-accent/20 text-accent">seniada</span>
+            <span className="chip bg-accent/10 text-accent">seniada</span>
             <span className="chip bg-info/15 text-info">en preparacion</span>
             <span className="chip bg-success/15 text-success">vendida</span>
-            <span className="chip bg-danger/15 text-danger">seña vencida</span>
+            <span className="chip bg-danger/10 text-danger">seña vencida</span>
           </div>
-          <p className="pt-3 text-[10px] text-muted">
+          <p className="pt-3 text-[0.625rem] text-muted">
             Demo frontend con datos de ejemplo. Sin backend conectado. Todo el diseño sale de shell/theme.ts.
           </p>
         </Seccion>

@@ -38,7 +38,8 @@ export type Theme = {
   sena: { alerta: number } // dias que le quedan a la reserva antes de vencer
   // El corredor de precio de la playa: ref(km) = base - caida * km, en USD.
   // Fuera de +-`sobre`/`oportunidad` % la unidad esta mal precificada.
-  banda: { base: number; caida: number; oportunidad: number; sobre: number }
+  // `piso` es el precio minimo de referencia: la banda nunca baja de ahi.
+  banda: { base: number; caida: number; piso: number; oportunidad: number; sobre: number }
 }
 
 export const vertice: Theme = {
@@ -51,7 +52,7 @@ export const vertice: Theme = {
   density: "compact",
   font: { heading: "Chakra Petch", body: "Figtree" },
   colors: {
-    primary: "#7b61ff", // violeta electrico: tecnologia, EV, financiacion. SOLO como fill (3.4:1, no sirve de texto).
+    primary: "#7e64ff", // violeta electrico: tecnologia, EV, financiacion. SOLO como fill. Auditoria: #7b61ff -> #7e64ff (mismo matiz) para que text-bg encima llegue a 4.5:1 (4.41 -> 4.55).
     accent: "#ff4d9d", // magenta neon: la luz de freno bajo la marquesina
     bg: "#14121c", // asfalto humedo de noche
     surface: "#1e1b29", // en dark la tarjeta va MAS CLARA que el fondo: flota
@@ -67,7 +68,7 @@ export const vertice: Theme = {
   aging: { fresco: 30, tibio: 60 },
   lead: { tibio: 3, frio: 7 },
   sena: { alerta: 3 },
-  banda: { base: 38000, caida: 0.135, oportunidad: -5, sobre: 5 },
+  banda: { base: 38000, caida: 0.135, piso: 8000, oportunidad: -5, sobre: 5 },
 }
 
 export const theme: Theme = vertice

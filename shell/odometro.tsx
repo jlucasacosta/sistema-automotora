@@ -1,4 +1,3 @@
-"use client"
 // panel-odometro · ARQUETIPO DE KPI NUEVO.
 // No es "anillos cortado a la mitad": lo que lo define es la AGUJA y la ZONA REDLINE.
 // Un anillo dice "cuanto llevo". Un dial de tablero dice "a que ritmo voy y donde
@@ -59,7 +58,7 @@ export function Odometro({ d }: { d: Dial }) {
 
   return (
     <div className="flex flex-col items-center">
-      <svg viewBox="0 0 120 70" className="w-full max-w-[9rem]">
+      <svg viewBox="0 0 120 70" className="w-full max-w-[9rem]" aria-hidden="true" focusable="false">
         {/* pista */}
         <path d={arco(0, 1)} className="stroke-border" strokeWidth={7} fill="none" strokeLinecap="round" />
         {/* recorrido real */}
@@ -84,8 +83,9 @@ export function Odometro({ d }: { d: Dial }) {
       <p className={"precio -mt-3 text-2xl leading-none " + textoValor[estado]}>
         {d.valor.toLocaleString("es-AR")}
         <span className="ml-1 text-[0.6rem] font-normal text-muted">{d.unidad}</span>
+        {enRedline && <span className="sr-only"> (en zona roja)</span>}
       </p>
-      <p className="mt-1 text-center text-[10px] uppercase tracking-widest text-muted">{d.label}</p>
+      <p className="mt-1 text-center text-[0.625rem] uppercase tracking-widest text-muted">{d.label}</p>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 // PATRON MOCK. Misma firma que la query real. Ver BACKEND.md.
 // La playa es la fuente de verdad de la unidad: el embudo y el comparador la consumen.
 // Marcas y modelos 100% INVENTADOS: nada de marcas registradas de terceros.
-import { theme } from "@/shell/theme"
+import { precioReferencia as referencia } from "@/shell/automotora"
 import raw from "./data.json"
 
 export type Segmento = "hatch" | "sedan" | "suv" | "pickup" | "utilitario" | "electrico"
@@ -30,10 +30,10 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 const unidades = (): Unidad[] => structuredClone(raw.unidades) as Unidad[]
 
-// El corredor de precio de la playa. Los dos numeros viven en theme.banda:
+// El corredor de precio de la playa. Los numeros viven en theme.banda (base, caida, piso):
 // ningun componente los inventa. Solo aplica a USADOS: un 0km no tiene corredor.
 export function precioReferencia(km: number) {
-  return Math.max(theme.banda.base - theme.banda.caida * km, 8000)
+  return referencia(km)
 }
 
 export function desvioPct(u: Unidad) {

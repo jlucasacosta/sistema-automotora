@@ -60,15 +60,16 @@ function Topbar({ path }: { path: string }) {
     <header className="sticky top-0 z-20 border-b border-border bg-surface">
       <div className="flex items-center gap-6 px-[var(--pad)] py-2.5">
         <Marca />
-        <nav className="flex flex-1 items-center gap-1 overflow-x-auto">
+        <nav aria-label="Principal" className="flex flex-1 items-center gap-1 overflow-x-auto">
           {nav.map(({ label, href, icon: Icon }) => {
             const active = path === href
             return (
               <Link
                 key={href}
                 href={href}
+                aria-current={active ? "page" : undefined}
                 className={
-                  "group flex shrink-0 items-center gap-2 rounded px-2 py-1.5 text-xs transition-colors " +
+                  "tap-44 group flex shrink-0 items-center gap-2 rounded px-2 py-1.5 text-xs transition-colors " +
                   (active ? "bg-subtle font-semibold text-fg" : "text-muted hover:bg-subtle hover:text-fg")
                 }
               >
@@ -90,15 +91,16 @@ function Sidebar({ path }: { path: string }) {
       <div className="mb-8 px-1 pt-2">
         <Marca />
       </div>
-      <nav className="space-y-1">
+      <nav aria-label="Principal" className="space-y-1">
         {nav.map(({ label, href, icon: Icon }) => {
           const active = path === href
           return (
             <Link
               key={href}
               href={href}
+              aria-current={active ? "page" : undefined}
               className={
-                "group flex items-center gap-3 rounded px-2 py-1.5 text-sm transition-colors " +
+                "tap-44 group flex items-center gap-3 rounded px-2 py-1.5 text-sm transition-colors " +
                 (active ? "bg-subtle font-medium text-fg" : "text-muted hover:bg-subtle hover:text-fg")
               }
             >
@@ -115,19 +117,19 @@ function Sidebar({ path }: { path: string }) {
 // --- rail: solo iconos. ---
 function Rail({ path }: { path: string }) {
   return (
-    <aside className="flex w-16 shrink-0 flex-col items-center gap-2 border-r border-border bg-surface py-4">
+    <nav aria-label="Principal" className="flex w-16 shrink-0 flex-col items-center gap-2 border-r border-border bg-surface py-4">
       <div className="mb-6">
         <Marca compact />
       </div>
       {nav.map(({ label, href, icon: Icon }) => {
         const active = path === href
         return (
-          <Link key={href} href={href} title={label} aria-label={label} className="group">
+          <Link key={href} href={href} title={label} aria-label={label} aria-current={active ? "page" : undefined} className="tap-44 group flex items-center justify-center">
             <IconChip Icon={Icon} active={active} size={18} />
           </Link>
         )
       })}
-    </aside>
+    </nav>
   )
 }
 

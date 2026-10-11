@@ -16,7 +16,7 @@ export function nivelDeAging(dias: number): NivelAging {
 export const chipAging: Record<NivelAging, string> = {
   fresco: "bg-success/15 text-success",
   tibio: "bg-warning/15 text-warning",
-  aniejo: "bg-danger/15 text-danger",
+  aniejo: "bg-danger/10 text-danger",
 }
 export const rellenoAging: Record<NivelAging, string> = {
   fresco: "bg-success",
@@ -41,7 +41,7 @@ export function nivelDeLead(diasSinContacto: number): NivelLead {
 export const chipLead: Record<NivelLead, string> = {
   activo: "bg-success/15 text-success",
   tibio: "bg-warning/15 text-warning",
-  frio: "bg-danger/15 text-danger",
+  frio: "bg-danger/10 text-danger",
 }
 export const textoLead: Record<NivelLead, string> = {
   activo: "text-success",
@@ -70,7 +70,7 @@ export type EstadoUnidad = "disponible" | "reservada" | "seniada" | "en preparac
 export const chipUnidad: Record<EstadoUnidad, string> = {
   disponible: "bg-primary/20 text-fg",
   reservada: "bg-warning/15 text-warning",
-  seniada: "bg-accent/20 text-accent",
+  seniada: "bg-accent/10 text-accent",
   "en preparacion": "bg-info/15 text-info",
   vendida: "bg-success/15 text-success",
 }
@@ -111,7 +111,7 @@ export const chipEtapa: Record<Etapa, string> = {
   contactado: "bg-info/15 text-info",
   "test drive": "bg-primary/20 text-fg",
   cotizacion: "bg-primary/20 text-fg",
-  senia: "bg-accent/20 text-accent",
+  senia: "bg-accent/10 text-accent",
   entrega: "bg-success/15 text-success",
 }
 
@@ -126,13 +126,18 @@ export function nivelDeBanda(desvioPct: number): NivelBanda {
 
 export const chipBanda: Record<NivelBanda, string> = {
   oportunidad: "bg-success/15 text-success",
-  justo: "bg-subtle text-muted",
-  sobre: "bg-danger/15 text-danger",
+  justo: "bg-primary/20 text-fg", // dentro de la referencia: primary, igual que la leyenda del tablero. Gris = estado mal.
+  sobre: "bg-danger/10 text-danger",
 }
 export const puntoBanda: Record<NivelBanda, string> = {
   oportunidad: "fill-success",
   justo: "fill-primary",
   sobre: "fill-danger",
+}
+
+// --- Precio de referencia del corredor precio x km (una sola fuente: scatter y catalogo la usan) ---
+export function precioReferencia(km: number) {
+  return Math.max(theme.banda.base - theme.banda.caida * km, theme.banda.piso)
 }
 
 // --- Formatos. Los autos se venden en USD y eso es la firma del rubro. ---

@@ -4,7 +4,7 @@
 
 :root {
   /* Fallbacks en triplete "R G B". El layout inyecta los valores reales del theme (VERTICE). */
-  --primary: 123 97 255;
+  --primary: 126 100 255;
   --accent: 255 77 157;
   --bg: 20 18 28;
   --surface: 30 27 41;
@@ -50,6 +50,39 @@
 }
 
 @layer components {
+  /* Foco visible, siempre, con el token de acento (6:1 sobre bg). Solo teclado: el mouse no lo ve. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+  }
+  /* Chip que hace de boton (filtros): en escritorio compacto, en tactil 44px. */
+  .chip-btn {
+    min-height: 1.75rem;
+  }
+  /* Link o boton de navegacion: area tactil de 44px sin cambiar la densidad de escritorio. */
+  @media (pointer: coarse) {
+    .chip-btn, .tap-44 {
+      min-height: 2.75rem;
+      min-width: 2.75rem;
+    }
+  }
+  /* Salto al contenido: invisible hasta que recibe foco con teclado. */
+  .skip-link {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
+    z-index: 50;
+    transform: translateY(-200%);
+    border-radius: var(--radius);
+    background: rgb(var(--primary));
+    color: rgb(var(--bg));
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
   /* elevation: flat -> la separacion la hacen la regla de 1px y el color. Editorial, no vidrio. */
   .surface-card {
     background: rgb(var(--surface));
@@ -113,12 +146,28 @@
 }
 .avanzando { animation: avanzar 420ms cubic-bezier(0.16, 1, 0.3, 1); }
 
-/* La seña vencida late en escarlata. Es el frame que se graba. */
+/* La seña vencida late en escarlata. Es el frame que se graba.
+   El riel de 3px (border-left) queda fijo; el latido es una barra extra que crece a 7px
+   con transform (compositor), no con border-left-width (que dispara layout en cada frame). */
 @keyframes latir-sena {
-  0%, 100% { border-left-width: 3px; }
-  50% { border-left-width: 7px; }
+  0%, 100% { transform: scaleX(0); }
+  50% { transform: scaleX(1); }
 }
-.sena-vencida { animation: latir-sena 1.25s ease-in-out infinite; }
+.sena-vencida { position: relative; }
+.sena-vencida::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: rgb(var(--danger));
+  border-radius: calc(var(--radius) - 3px) 0 0 calc(var(--radius) - 3px);
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: latir-sena 1.25s ease-in-out infinite;
+  pointer-events: none;
+}
 
 /* La carta se reparte del mazo al tope. */
 @keyframes repartir {
@@ -142,8 +191,8 @@
 .snap { animation: snap 340ms cubic-bezier(0.34, 1.4, 0.64, 1); }
 
 @keyframes flash-ganadora {
-  0%, 100% { background-color: rgb(var(--success) / 0.12); }
-  40% { background-color: rgb(var(--success) / 0.34); }
+  0%, 100% { background-color: rgb(var(--success) / 0.10); }
+  40% { background-color: rgb(var(--success) / 0.24); }
 }
 .ganadora-flash { animation: flash-ganadora 900ms ease-out; }
 
@@ -156,7 +205,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .lane, .deck-carta { transition: none; }
-  .avanzando, .sena-vencida, .repartida, .aguja, .snap, .ganadora-flash, .ribbon { animation: none; }
+  .avanzando, .repartida, .aguja, .snap, .ganadora-flash, .ribbon, .animate-pulse { animation: none; }
+  /* La seña vencida sigue marcada sin movimiento: riel de 3px + icono + texto "vencio hace N dias". */
+  .sena-vencida::before { animation: none; }
 }
 
 html {

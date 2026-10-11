@@ -18,14 +18,16 @@ Aprendé a crear tu Agencia de IA y conseguir tu primer cliente. Eso lo trabajam
 ---
 
 ## Qué incluye
-- Tablero: el **panel de odómetros** (diales con aguja y zona redline) y el **corredor de precio × kilometraje**, donde cada unidad es un punto y las que están arriba de la banda son las que no se venden
-- Embudo: las oportunidades en trapecios que se **angostan y se re-escalan** al mover una ficha (arrastrándola o con las flechas del teclado), con la seña vencida latiendo en rojo
+- Tablero: el **panel de odómetros** (diales con aguja y zona redline, calculados desde las otras pantallas) y el **corredor de precio × kilometraje**, donde cada unidad es un punto y las que están arriba de la banda son las que no se venden
+- Embudo: las oportunidades en trapecios que se **angostan y se re-escalan** al mover una ficha (arrastrándola o con las flechas del teclado); la seña vencida se marca con rótulo, ícono y borde rojo (sin animación)
 - **Comparador de unidades**: se arrastran hasta tres autos a la bandeja (o se suman con un click) y la tabla marca la celda ganadora de cada spec
-- Playa: el catálogo como un **mazo de cartas** — se reparte una unidad al tope y se le da vuelta para ver la ficha técnica
-- Ventas: boletos de compraventa con seña, saldo, forma de pago y comisión
+- Playa: el catálogo de unidades (con buscador y filtros por estado, segmento, condición y orden). Al tocar una unidad se abre su **ficha completa** con la patente, el precio en USD, la ficha técnica y acciones de demo (enviar cotización, agendar test drive, reservar)
+- Ventas: boletos de compraventa; al tocar uno se abre la ficha con seña, saldo, forma de pago y comisión, y acciones de demo (registrar cobro, anular, enviar boleto)
 - Mensajes: cada hilo atado a una unidad
-- Leads: el CRM con la temperatura de cada contacto
+- Leads: el CRM con la temperatura de cada contacto (los clientes que ya compraron no tienen temperatura); al tocar un contacto se abre su ficha con la oportunidad abierta
 - Configuración
+
+Todas las pantallas muestran `—` y un esqueleto fijo mientras cargan, y un aviso con **Reintentar** si la carga falla. Las acciones de las fichas son de demostración: dicen "Demo: no se guardó nada" y viven solo en memoria. En el celular, el menú superior se desliza con un degradé que avisa que hay más secciones, y el buscador y los chips de estado quedan arriba de la lista (el resto de los filtros, en un botón "Filtros").
 
 ## Requisitos (instalá esto primero)
 
@@ -79,7 +81,7 @@ Son de **solo lectura**: lo que hagas en pantalla (mover una ficha, filtrar, com
 ## Estructura de carpetas
 
     app/            las rutas (cada una re-exporta su módulo) y los estilos globales
-    shell/          la capa de diseño: theme.ts, navegación, odómetro, scatter, comparador
+    shell/          la capa de diseño: theme.ts, navegación, odómetro, scatter, comparador, y las piezas compartidas carga.tsx (cargando y error) y ficha-lateral.tsx (la ficha)
     modules/        un módulo por pantalla: index.tsx, api.ts, data.json y BACKEND.md
     docs/           IMPLEMENTAR.md: la guía para llevarlo a producción
     DISENO.md       la ficha de diseño (decisiones visuales)

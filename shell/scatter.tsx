@@ -6,6 +6,8 @@
 //
 // Los ejes salen de los datos y de la banda (no hay un maximo escrito a mano): si movés
 // `theme.banda.base`, el lienzo se re-escala en vez de dejar la banda fuera de cuadro.
+"use client"
+import { useEffect, useRef, useState } from "react"
 import { nivelDeBanda, precioReferencia, puntoBanda, usd, type NivelBanda } from "./automotora"
 import { theme } from "./theme"
 
@@ -17,9 +19,11 @@ export type Punto = {
   diasPlaya: number
 }
 
-const W = 420
-const H = 240
-const PAD = { l: 44, r: 12, t: 12, b: 26 }
+// El lienzo toma el ancho real de su tarjeta: asi el texto de los ejes mide 12 px en cualquier pantalla
+// (un viewBox fijo lo achicaba a 6 px en celular).
+const ANCHO_INICIAL = 420
+const FUENTE = 12
+const PAD = { l: 48, r: 12, t: 12, b: 30 }
 
 // Texto para quien no ve el color: el estado respecto de la banda.
 const textoBanda: Record<NivelBanda, string> = {
@@ -29,6 +33,19 @@ const textoBanda: Record<NivelBanda, string> = {
 }
 
 export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
+  const caja = useRef<HTMLDivElement>(null)
+  const [W, setW] = useState(ANCHO_INICIAL)
+  useEffect(() => {
+    const el = caja.current
+    if (!el) return
+    const medir = () => setW(Math.max(260, Math.round(el.clientWidth)))
+    medir()
+    const ro = new ResizeObserver(medir)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  const H = W < 480 ? 260 : 280
+
   const ref = precioReferencia
   const alto = (km: number) => ref(km) * (1 + theme.banda.sobre / 100)
   const bajo = (km: number) => ref(km) * (1 + theme.banda.oportunidad / 100)
@@ -52,7 +69,8 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
   ].join(" ")
 
   const ticksKm: number[] = []
-  for (let k = 0; k <= kmMax; k += 50000) ticksKm.push(k)
+  const pasoKm = W < 480 ? 100000 : 50000
+  for (let k = 0; k <= kmMax; k += pasoKm) ticksKm.push(k)
   const ticksPrecio: number[] = []
   for (let p = precioMin + 5000; p <= precioMax; p += 10000) ticksPrecio.push(p)
 
@@ -62,24 +80,26 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
   })
 
   return (
-    <>
+    <div ref={caja} className="w-full min-w-0">
       <svg
+        width={W}
+        height={H}
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full"
+        className="block max-w-full"
         role="img"
         aria-label="Gráfico de precio contra kilometraje de las unidades usadas. El detalle de cada unidad está en la tabla que sigue."
       >
         {ticksPrecio.map((p) => (
           <g key={p}>
             <line x1={PAD.l} y1={y(p)} x2={W - PAD.r} y2={y(p)} className="stroke-border" strokeWidth={0.5} />
-            <text x={PAD.l - 6} y={y(p) + 3} textAnchor="end" fontSize={8} className="fill-muted">
+            <text x={PAD.l - 6} y={y(p) + 4} textAnchor="end" fontSize={FUENTE} className="fill-muted">
               {p / 1000}k
             </text>
           </g>
         ))}
         {ticksKm.map((k) => (
-          <text key={k} x={x(k)} y={H - 8} textAnchor="middle" fontSize={8} className="fill-muted">
-            {k / 1000}k km
+          <text key={k} x={Math.min(Math.max(x(k), PAD.l + 14), W - PAD.r - 14)} y={H - 8} textAnchor="middle" fontSize={FUENTE} className="fill-muted">
+            {k === 0 ? "0 km" : `${k / 1000}k km`}
           </text>
         ))}
 
@@ -87,7 +107,7 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
         <polygon points={banda} className="fill-primary/10 stroke-primary/40" strokeWidth={0.75} strokeDasharray="3 3" />
 
         {filas.map(({ p, desvio, nivel }) => {
-          const r = 3.5 + Math.min(p.diasPlaya, 160) / 32
+          const r = 4 + Math.min(p.diasPlaya, 160) / 24
           return (
             <circle
               key={p.id}
@@ -134,6 +154,6 @@ export function ScatterPrecioKm({ puntos }: { puntos: Punto[] }) {
         </tbody>
       </table>
       </div>
-    </>
+    </div>
   )
 }

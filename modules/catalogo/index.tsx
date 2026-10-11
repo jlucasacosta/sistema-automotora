@@ -1,7 +1,7 @@
 "use client"
-import { useEffect, useState } from "react"
-import { RotateCcw, Fuel, Cog, Calendar, Palette } from "lucide-react"
-import { getUnidades, desvioPct, type Unidad, type Segmento } from "./api"
+import { useMemo, useState, type ReactNode } from "react"
+import { SlidersHorizontal } from "lucide-react"
+import { getUnidades, desvioPct, type Unidad, type Segmento, type EstadoUnidad } from "./api"
 import {
   chipUnidad,
   rotuloEstadoUnidad,
@@ -12,206 +12,340 @@ import {
   nivelDeAging,
   chipBanda,
   nivelDeBanda,
+  precioReferencia,
   usd,
   ars,
   km as fmtKm,
 } from "@/shell/automotora"
+import { theme } from "@/shell/theme"
+import { Esqueleto, ErrorCarga, useCarga } from "@/shell/carga"
+import { FichaLateral, DatoFicha, AvisoDemo, botonPrimario, botonSecundario } from "@/shell/ficha-lateral"
 
-// ficha-flip-deck · ARQUETIPO DE DATOS NUEVO.
-// No es una galeria. Una galeria es una grilla de cards estaticas, todas del mismo
-// tamaño, todas visibles. Esto es un MAZO: hay UNA carta al tope, grande, y el resto
-// espera en el riel. Se elige una del riel y SE REPARTE al tope; se hace click en la
-// carta y da vuelta (flip 3D) para mostrar la ficha tecnica en el dorso.
-// Cero imagenes de producto: la firma es la patente stencil y el precio en USD.
+// La playa: el catalogo de unidades. Cada unidad abre su ficha completa (FichaLateral) con la
+// patente stencil y el precio en USD, que son la firma del rubro. El mazo con vuelta 3D
+// se reemplazo por esta lista + ficha (decision de Lucas, 2026-10-11: sin animaciones decorativas).
 
+type FiltroEstado = "en playa" | EstadoUnidad
+type Orden = "codigo" | "antiguas" | "precio-menor" | "precio-mayor"
+type Condicion = "todas" | "0km" | "usados"
+
+const ESTADOS: FiltroEstado[] = ["en playa", "disponible", "reservada", "seniada", "en preparacion", "vendida"]
+const rotuloFiltroEstado: Record<FiltroEstado, string> = { "en playa": "en playa", ...rotuloEstadoUnidad }
 const SEGMENTOS: (Segmento | "todos")[] = ["todos", "hatch", "sedan", "suv", "pickup", "utilitario", "electrico"]
+const ORDENES: { v: Orden; t: string }[] = [
+  { v: "codigo", t: "Por código" },
+  { v: "antiguas", t: "Más días en stock primero" },
+  { v: "precio-menor", t: "Precio, menor a mayor" },
+  { v: "precio-mayor", t: "Precio, mayor a menor" },
+]
 
-function Spec({ icon: Icon, label, valor }: { icon: typeof Fuel; label: string; valor: string }) {
+const campo = "w-full rounded-[var(--radius)] border border-muted/70 bg-surface px-2 py-1.5 text-xs text-fg"
+
+function Control({ etiqueta, children }: { etiqueta: string; children: ReactNode }) {
   return (
-    <div className="flex items-center gap-2 border-b border-border py-1.5 last:border-0">
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-subtle text-muted">
-        <Icon size={12} strokeWidth={2} />
-      </span>
-      <span className="text-[0.625rem] uppercase tracking-widest text-muted">{label}</span>
-      <span className="dato ml-auto text-xs font-medium">{valor}</span>
-    </div>
+    <label className="block min-w-0">
+      <span className="mb-1 block text-xs text-muted">{etiqueta}</span>
+      {children}
+    </label>
   )
 }
 
 export function CatalogoPage() {
-  const [unidades, setUnidades] = useState<Unidad[]>([])
+  const { data, cargando, error, reintentar } = useCarga(getUnidades)
+  const [q, setQ] = useState("")
+  const [estado, setEstado] = useState<FiltroEstado>("en playa")
   const [segmento, setSegmento] = useState<Segmento | "todos">("todos")
-  const [topeId, setTopeId] = useState<string | null>(null)
-  const [vuelta, setVuelta] = useState(false)
+  const [condicion, setCondicion] = useState<Condicion>("todas")
+  const [orden, setOrden] = useState<Orden>("codigo")
+  const [filtros, setFiltros] = useState(false)
+  const [sel, setSel] = useState<Unidad | null>(null)
+  // Cambios de estado de la demo: viven solo en memoria (F5 vuelve a la data real).
+  const [cambios, setCambios] = useState<Record<string, EstadoUnidad>>({})
+  const [aviso, setAviso] = useState<string | null>(null)
 
-  useEffect(() => {
-    getUnidades().then((us) => {
-      setUnidades(us)
-      setTopeId(us[0]?.id ?? null)
+  const unidades = useMemo(
+    () => (data ?? []).map((u) => (cambios[u.id] ? { ...u, estado: cambios[u.id] } : u)),
+    [data, cambios],
+  )
+
+  const visibles = useMemo(() => {
+    const t = q.trim().toLowerCase()
+    const lista = unidades.filter((u) => {
+      if (estado === "en playa" ? u.estado === "vendida" : u.estado !== estado) return false
+      if (segmento !== "todos" && u.segmento !== segmento) return false
+      if (condicion === "0km" && u.km !== 0) return false
+      if (condicion === "usados" && u.km === 0) return false
+      if (!t) return true
+      return `${u.id} ${u.marca} ${u.modelo} ${u.version} ${u.patente ?? ""}`.toLowerCase().includes(t)
     })
-  }, [])
+    if (orden === "antiguas") lista.sort((a, b) => b.diasPlaya - a.diasPlaya)
+    if (orden === "precio-menor") lista.sort((a, b) => a.precio - b.precio)
+    if (orden === "precio-mayor") lista.sort((a, b) => b.precio - a.precio)
+    return lista
+  }, [unidades, q, estado, segmento, condicion, orden])
 
-  const visibles = unidades.filter((u) => segmento === "todos" || u.segmento === segmento)
-  const tope = visibles.find((u) => u.id === topeId) ?? visibles[0]
-
-  const repartir = (id: string) => {
-    setVuelta(false)
-    setTopeId(id)
+  const filtrosActivos = (segmento !== "todos" ? 1 : 0) + (condicion !== "todas" ? 1 : 0) + (orden !== "codigo" ? 1 : 0)
+  const limpiar = () => {
+    setSegmento("todos")
+    setCondicion("todas")
+    setOrden("codigo")
   }
 
-  const desvio = tope ? desvioPct(tope) : 0
+  const abrir = (u: Unidad) => {
+    setAviso(null)
+    setSel(u)
+  }
+  const cambiarEstado = (u: Unidad, nuevo: EstadoUnidad, texto: string) => {
+    setCambios((c) => ({ ...c, [u.id]: nuevo }))
+    setSel({ ...u, estado: nuevo })
+    setAviso(`${texto}. Demo: no se guardó nada`)
+  }
+
+  const controles = (
+    <>
+      <Control etiqueta="Segmento">
+        <select value={segmento} onChange={(e) => setSegmento(e.target.value as Segmento | "todos")} className={campo}>
+          {SEGMENTOS.map((s) => (
+            <option key={s} value={s}>
+              {rotuloSegmento[s] ?? s}
+            </option>
+          ))}
+        </select>
+      </Control>
+      <Control etiqueta="Condición">
+        <select value={condicion} onChange={(e) => setCondicion(e.target.value as Condicion)} className={campo}>
+          <option value="todas">0 km y usados</option>
+          <option value="0km">Solo 0 km</option>
+          <option value="usados">Solo usados</option>
+        </select>
+      </Control>
+      <Control etiqueta="Orden">
+        <select value={orden} onChange={(e) => setOrden(e.target.value as Orden)} className={campo}>
+          {ORDENES.map((o) => (
+            <option key={o.v} value={o.v}>
+              {o.t}
+            </option>
+          ))}
+        </select>
+      </Control>
+    </>
+  )
+
+  const desvio = sel ? desvioPct(sel) : 0
+  const esUsadoEnPlaya = !!sel && sel.km > 0 && sel.estado !== "vendida"
 
   return (
     <div className="space-y-4">
       <div>
         <h1 className="font-heading text-2xl font-bold uppercase tracking-tight">Catálogo</h1>
-        <p className="text-[0.6875rem] text-muted">
-          Elegí una unidad de la lista para verla en detalle. Hacé click en la ficha para ver los datos técnicos.
-        </p>
+        <p className="text-xs text-muted">Tocá una unidad para ver su ficha completa.</p>
       </div>
 
-      {/* subbar de filtros: parte de la estructura topbar-con-subbar-filtros */}
-      <div role="group" aria-label="Filtrar por segmento" className="flex flex-wrap items-center gap-1.5 border-b border-border pb-3">
-        {SEGMENTOS.map((s) => (
-          <button
-            key={s}
-            type="button"
-            aria-pressed={segmento === s}
-            onClick={() => setSegmento(s)}
-            className={
-              "chip chip-btn transition-colors " +
-              (segmento === s ? "bg-primary text-bg" : "bg-subtle text-muted hover:text-fg")
-            }
+      {error && <ErrorCarga onReintentar={reintentar} />}
+
+      <section aria-busy={cargando} aria-label="Unidades" className="space-y-3">
+        <div className="flex flex-col gap-2 md:flex-row md:items-end md:gap-3">
+          <input
+            type="search"
+            aria-label="Buscar unidades por modelo, patente o código"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Buscar por modelo, patente o código"
+            className={campo + " md:w-72 md:shrink-0 md:py-1.5"}
+          />
+          <div className="hidden min-w-0 flex-1 grid-cols-3 gap-2 md:grid">{controles}</div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <div
+            role="group"
+            aria-label="Filtrar por estado"
+            className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto pb-1 md:flex-wrap md:overflow-visible md:pb-0"
           >
-            {rotuloSegmento[s] ?? s}
-          </button>
-        ))}
-        <span className="dato ml-auto text-[0.625rem] text-muted">{visibles.length} unidades</span>
-      </div>
-
-      {tope && (
-        <div className="grid gap-4 lg:grid-cols-[26rem_1fr]">
-          {/* LA CARTA AL TOPE: click = flip 3D */}
-          <div className="deck-perspectiva">
-            {/* El click en cualquier parte de la carta la da vuelta (mouse). Para teclado y lectores hay un
-                boton real en cada cara; la cara que no se ve queda inert + aria-hidden. */}
-            <div
-              onClick={() => setVuelta((v) => !v)}
-              className={"deck-carta repartida relative block h-[22rem] w-full cursor-pointer text-left " + (vuelta ? "dada-vuelta" : "")}
-              key={tope.id}
-            >
-              {/* frente */}
-              <div
-                inert={vuelta}
-                aria-hidden={vuelta}
-                className="deck-cara surface-card absolute inset-0 flex flex-col justify-between border border-border p-5"
+            {ESTADOS.map((e) => (
+              <button
+                key={e}
+                type="button"
+                aria-pressed={estado === e}
+                onClick={() => setEstado(e)}
+                className={
+                  "chip chip-btn shrink-0 transition-colors " +
+                  (estado === e ? "bg-primary text-bg" : "bg-subtle text-fg hover:bg-border")
+                }
               >
-                <div>
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <p className="text-[0.625rem] uppercase tracking-widest text-muted">{tope.marca}</p>
-                      <h2 className="font-heading text-3xl font-bold leading-none">{tope.modelo}</h2>
-                      <p className="mt-1 text-xs text-muted">{tope.version}</p>
-                    </div>
-                    <span className={"chip " + chipUnidad[tope.estado]}>{rotuloEstadoUnidad[tope.estado] ?? tope.estado}</span>
-                  </div>
-
-                  <p className="patente mt-5 inline-block rounded border border-border bg-subtle px-3 py-1.5 text-sm">
-                    {tope.patente ?? "SIN PATENTAR"}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="precio text-5xl leading-none text-fg">{usd(tope.precio)}</p>
-                  <p className="dato mt-1 text-xs text-muted">
-                    o {ars(tope.cuota)} / mes · 48 cuotas
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    <span className="chip bg-subtle text-muted">{tope.anio}</span>
-                    <span className="chip bg-subtle text-muted">{fmtKm(tope.km)}</span>
-                    <span className={"chip " + chipAging[nivelDeAging(tope.diasPlaya)]}>{tope.diasPlaya} d en stock</span>
-                    {tope.km > 0 && (
-                      <span className={"chip " + chipBanda[nivelDeBanda(desvio)]}>
-                        {desvio >= 0 ? "+" : ""}
-                        {desvio.toFixed(1)}% vs referencia
-                      </span>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    aria-label={`Ver datos técnicos de ${tope.marca} ${tope.modelo}`}
-                    className="chip-btn mt-3 flex items-center gap-1 text-[0.625rem] uppercase tracking-widest text-muted"
-                  >
-                    <RotateCcw size={11} strokeWidth={2.5} /> ver datos técnicos
-                  </button>
-                </div>
-              </div>
-
-              {/* dorso: la ficha tecnica */}
-              <div
-                inert={!vuelta}
-                aria-hidden={!vuelta}
-                className="deck-cara deck-dorso surface-card absolute inset-0 border border-primary/50 p-5"
-              >
-                {/* accent, no primary: el violeta da 3.4:1 sobre la tarjeta y no sirve como texto */}
-                <h3 className="font-heading text-sm font-bold uppercase tracking-widest text-accent">Ficha técnica</h3>
-                <p className="mb-3 text-[0.625rem] text-muted">
-                  {tope.marca} {tope.modelo} {tope.version}
-                </p>
-                <Spec icon={Cog} label="Motor" valor={tope.motor} />
-                <Spec icon={Cog} label="Caja" valor={rotuloCaja[tope.caja] ?? tope.caja} />
-                <Spec icon={Fuel} label="Combustible" valor={rotuloCombustible[tope.combustible] ?? tope.combustible} />
-                <Spec icon={Calendar} label="Año" valor={String(tope.anio)} />
-                <Spec icon={Palette} label="Color" valor={tope.color} />
-                <Spec icon={Cog} label="Segmento" valor={rotuloSegmento[tope.segmento] ?? tope.segmento} />
-                <button
-                  type="button"
-                  aria-label="Volver al frente de la ficha"
-                  className="chip-btn mt-4 flex items-center gap-1 text-[0.625rem] uppercase tracking-widest text-muted"
-                >
-                  <RotateCcw size={11} strokeWidth={2.5} /> volver
-                </button>
-              </div>
-            </div>
+                {rotuloFiltroEstado[e]}
+              </button>
+            ))}
           </div>
+          <button
+            type="button"
+            onClick={() => setFiltros(true)}
+            className={botonSecundario + " shrink-0 gap-1.5 md:hidden"}
+          >
+            <SlidersHorizontal size={14} aria-hidden="true" />
+            Filtros ({filtrosActivos})
+          </button>
+        </div>
 
-          {/* EL RIEL: el resto del mazo, esperando que lo repartan */}
-          <div className="surface-card p-3">
-            <h3 className="mb-2 font-heading text-[0.6875rem] font-bold uppercase tracking-widest text-muted">
-              Unidades · {visibles.length}
-            </h3>
-            <ul tabIndex={0} aria-label="Unidades del catálogo" className="grid max-h-[19rem] gap-1.5 overflow-y-auto pr-1 sm:grid-cols-2">
-              {visibles.map((u) => {
-                const activa = u.id === tope.id
-                return (
-                  <li key={u.id}>
+        <p className="dato text-xs text-muted" aria-live="polite">
+          {cargando ? "—" : visibles.length} unidades
+        </p>
+
+        {cargando ? (
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3" aria-hidden="true">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Esqueleto key={i} className="h-36" />
+            ))}
+          </div>
+        ) : error ? null : visibles.length ? (
+          <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {visibles.map((u) => (
+              <li key={u.id} className="surface-card relative p-3 transition-colors hover:bg-subtle">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="dato text-xs text-muted">
+                      {u.id} · {u.anio}
+                    </p>
                     <button
                       type="button"
-                      aria-current={activa ? "true" : undefined}
-                      onClick={() => repartir(u.id)}
-                      className={
-                        "w-full rounded border px-2 py-1.5 text-left transition-colors " +
-                        (activa ? "border-primary bg-primary/10" : "border-border bg-subtle hover:border-primary/60")
-                      }
+                      onClick={() => abrir(u)}
+                      className="block max-w-full truncate text-left font-heading text-base font-bold after:absolute after:inset-0 after:content-['']"
                     >
-                      <p className="truncate font-heading text-xs font-semibold">
-                        {u.marca} {u.modelo}
-                      </p>
-                      <p className="dato flex items-center justify-between text-[0.625rem] text-muted">
-                        <span>
-                          {u.anio} · {fmtKm(u.km)}
-                        </span>
-                        <span className="precio text-fg">{usd(u.precio)}</span>
-                      </p>
-                      <p className="patente mt-1 text-[0.625rem] text-muted">{u.patente ?? "SIN PATENTAR"}</p>
+                      {u.marca} {u.modelo}
+                      <span className="sr-only"> {u.version}. Abrir ficha</span>
                     </button>
-                  </li>
-                )
-              })}
-            </ul>
+                    <p className="truncate text-xs text-muted">{u.version}</p>
+                  </div>
+                  <span className={"chip " + chipUnidad[u.estado]}>{rotuloEstadoUnidad[u.estado] ?? u.estado}</span>
+                </div>
+                <p className="patente mt-2 inline-block rounded border border-border bg-subtle px-2 py-0.5 text-xs">
+                  {u.patente ?? "SIN PATENTAR"}
+                </p>
+                <div className="mt-2 flex items-end justify-between gap-2">
+                  <p className="precio text-2xl leading-none text-fg">{usd(u.precio)}</p>
+                  <p className="dato text-right text-xs text-muted">{fmtKm(u.km)}</p>
+                </div>
+                <p className="dato mt-2 flex items-center gap-2 text-xs text-muted">
+                  En stock:
+                  {u.estado === "vendida" ? (
+                    <span>—</span>
+                  ) : (
+                    <span className={"chip " + chipAging[nivelDeAging(u.diasPlaya)]}>{u.diasPlaya} días</span>
+                  )}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="surface-card py-10 text-center text-sm text-muted">No hay unidades con esos filtros.</p>
+        )}
+
+        {!cargando && (
+          <p className="text-xs text-muted">
+            Días en stock: verde hasta {theme.aging.fresco}, ámbar hasta {theme.aging.tibio}, rojo desde ahí. Las unidades
+            vendidas no cuentan días.
+          </p>
+        )}
+      </section>
+
+      {/* Filtros en celular: el resto de los controles, en una hoja. */}
+      <FichaLateral
+        abierta={filtros}
+        titulo="Filtros"
+        subtitulo={`${visibles.length} unidades`}
+        onCerrar={() => setFiltros(false)}
+        acciones={
+          <>
+            <button type="button" onClick={() => setFiltros(false)} className={botonPrimario}>
+              Ver {visibles.length} unidades
+            </button>
+            <button type="button" onClick={limpiar} className={botonSecundario}>
+              Limpiar
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">{controles}</div>
+      </FichaLateral>
+
+      <FichaLateral
+        abierta={!!sel}
+        titulo={sel ? `${sel.marca} ${sel.modelo}` : ""}
+        subtitulo={sel ? `${sel.version} · ${sel.id}` : undefined}
+        onCerrar={() => setSel(null)}
+        acciones={
+          sel && (
+            <>
+              <button type="button" onClick={() => setAviso("Enviar cotización. Demo: no se guardó nada")} className={botonPrimario}>
+                Enviar cotización
+              </button>
+              <button type="button" onClick={() => setAviso("Agendar test drive. Demo: no se guardó nada")} className={botonSecundario}>
+                Agendar test drive
+              </button>
+              {sel.estado === "disponible" && (
+                <button
+                  type="button"
+                  onClick={() => cambiarEstado(sel, "reservada", "Reservar unidad")}
+                  className={botonSecundario}
+                >
+                  Reservar unidad
+                </button>
+              )}
+              {(sel.estado === "reservada" || sel.estado === "seniada" || sel.estado === "en preparacion") && (
+                <button
+                  type="button"
+                  onClick={() => cambiarEstado(sel, "disponible", sel.estado === "en preparacion" ? "Marcar disponible" : "Liberar unidad")}
+                  className={botonSecundario}
+                >
+                  {sel.estado === "en preparacion" ? "Marcar disponible" : "Liberar unidad"}
+                </button>
+              )}
+            </>
+          )
+        }
+      >
+        {sel && (
+          <div>
+            <p className="patente inline-block rounded border border-border bg-subtle px-3 py-1.5 text-sm">
+              {sel.patente ?? "SIN PATENTAR"}
+            </p>
+            <p className="precio mt-3 text-4xl leading-none text-fg">{usd(sel.precio)}</p>
+            <p className="dato mt-1 text-xs text-muted">o {ars(sel.cuota)} / mes · 48 cuotas</p>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              <span className={"chip " + chipUnidad[sel.estado]}>{rotuloEstadoUnidad[sel.estado] ?? sel.estado}</span>
+              {esUsadoEnPlaya && (
+                <span className={"chip " + chipBanda[nivelDeBanda(desvio)]}>
+                  {desvio >= 0 ? "+" : ""}
+                  {desvio.toFixed(1)}% vs referencia
+                </span>
+              )}
+            </div>
+
+            <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3">
+              <DatoFicha etiqueta="Código">{sel.id}</DatoFicha>
+              <DatoFicha etiqueta="Año">{sel.anio}</DatoFicha>
+              <DatoFicha etiqueta="Kilometraje">{fmtKm(sel.km)}</DatoFicha>
+              <DatoFicha etiqueta="Condición">{sel.km === 0 ? "0 km" : "usado"}</DatoFicha>
+              <DatoFicha etiqueta="Motor">{sel.motor}</DatoFicha>
+              <DatoFicha etiqueta="Caja">{rotuloCaja[sel.caja] ?? sel.caja}</DatoFicha>
+              <DatoFicha etiqueta="Combustible">{rotuloCombustible[sel.combustible] ?? sel.combustible}</DatoFicha>
+              <DatoFicha etiqueta="Color">{sel.color}</DatoFicha>
+              <DatoFicha etiqueta="Segmento">{rotuloSegmento[sel.segmento] ?? sel.segmento}</DatoFicha>
+              <DatoFicha etiqueta="Días en stock">
+                {sel.estado === "vendida" ? (
+                  "—"
+                ) : (
+                  <span className={"chip " + chipAging[nivelDeAging(sel.diasPlaya)]}>{sel.diasPlaya} días</span>
+                )}
+              </DatoFicha>
+              <DatoFicha etiqueta="Precio de referencia">
+                {esUsadoEnPlaya ? usd(Math.round(precioReferencia(sel.km))) : "—"}
+              </DatoFicha>
+            </dl>
+            <AvisoDemo texto={aviso} />
           </div>
-        </div>
-      )}
+        )}
+      </FichaLateral>
     </div>
   )
 }

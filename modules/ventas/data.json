@@ -17,27 +17,27 @@
       "id": "BOL-2290",
       "fecha": "08/07",
       "comprador": "Nicolas Baigorria",
-      "unidad": "KERO Duma 1.5T Prime 2021",
-      "patente": "AF 044 BN",
-      "precio": 32100,
+      "unidad": "KERO Duma 1.5T Prime 2020",
+      "patente": "AE 288 FV",
+      "precio": 30800,
       "sena": 5000,
       "formaPago": "contado",
       "estado": "cobrada",
       "vendedor": "Milena Sarti",
-      "comision": 642
+      "comision": 616
     },
     {
       "id": "BOL-2289",
       "fecha": "08/07",
       "comprador": "Abril Nardelli",
-      "unidad": "OSMA Tilo 1.0 Live 2020",
-      "patente": "AE 950 RB",
-      "precio": 27300,
+      "unidad": "OSMA Tilo 1.0 Live 2019",
+      "patente": "AD 855 EP",
+      "precio": 26200,
       "sena": 2500,
       "formaPago": "permuta + saldo",
       "estado": "cobrada",
       "vendedor": "Renata Villalba",
-      "comision": 546
+      "comision": 524
     },
     {
       "id": "BOL-2288",
@@ -56,14 +56,14 @@
       "id": "BOL-2287",
       "fecha": "07/07",
       "comprador": "Malena Riquelme",
-      "unidad": "ALVA Nira 1.6 XLS 2021",
-      "patente": "AF 412 KD",
-      "precio": 33200,
+      "unidad": "ALVA Nira 1.6 XLS 2020",
+      "patente": "AE 228 ND",
+      "precio": 31900,
       "sena": 3500,
       "formaPago": "contado",
       "estado": "cobrada",
       "vendedor": "Milena Sarti",
-      "comision": 664
+      "comision": 638
     },
     {
       "id": "BOL-2286",
@@ -82,7 +82,7 @@
       "id": "BOL-2285",
       "fecha": "04/07",
       "comprador": "Carla Vanzetti",
-      "unidad": "VANTEL Brio Sport 0km 2026",
+      "unidad": "VANTEL Brio Sport Plus 0km 2026",
       "patente": null,
       "precio": 34700,
       "sena": 6000,
@@ -95,14 +95,14 @@
       "id": "BOL-2284",
       "fecha": "04/07",
       "comprador": "Diego Aramburu",
-      "unidad": "ZEFIR Cobre 1.5 Hybrid 2019",
-      "patente": "AC 853 LD",
-      "precio": 21500,
+      "unidad": "ZEFIR Cobre 1.5 Hybrid 2018",
+      "patente": "AB 983 GN",
+      "precio": 20600,
       "sena": 2000,
       "formaPago": "permuta + saldo",
       "estado": "cobrada",
       "vendedor": "Bruno Lattanzio",
-      "comision": 430
+      "comision": 412
     },
     {
       "id": "BOL-2283",
@@ -134,40 +134,40 @@
       "id": "BOL-2281",
       "fecha": "01/07",
       "comprador": "Lucia Sanguinetti",
-      "unidad": "TESSARI Lume Sport 2020",
-      "patente": "AE 762 TN",
-      "precio": 33100,
+      "unidad": "TESSARI Lume Sport 2019",
+      "patente": "AC 105 HB",
+      "precio": 31800,
       "sena": 4000,
       "formaPago": "prendario",
       "estado": "cobrada",
       "vendedor": "Renata Villalba",
-      "comision": 662
+      "comision": 636
     },
     {
       "id": "BOL-2280",
       "fecha": "30/06",
       "comprador": "Federico Olguin",
-      "unidad": "MARLO Randa 1.6 Pack 2021",
-      "patente": "AF 718 DT",
-      "precio": 30900,
+      "unidad": "MARLO Randa 1.6 Pack 2020",
+      "patente": "AD 643 TM",
+      "precio": 29700,
       "sena": 3000,
       "formaPago": "plan de ahorro",
       "estado": "cobrada",
       "vendedor": "Bruno Lattanzio",
-      "comision": 618
+      "comision": 594
     },
     {
       "id": "BOL-2279",
       "fecha": "28/06",
       "comprador": "Antonella Prieto",
-      "unidad": "OSMA Tilo Plus 2018",
-      "patente": "AB 604 XW",
-      "precio": 22700,
+      "unidad": "OSMA Tilo Plus 2017",
+      "patente": "AA 689 FA",
+      "precio": 21800,
       "sena": 2000,
       "formaPago": "contado",
       "estado": "cobrada",
       "vendedor": "Milena Sarti",
-      "comision": 454
+      "comision": 436
     },
     {
       "id": "BOL-2278",
@@ -186,27 +186,27 @@
       "id": "BOL-2277",
       "fecha": "26/06",
       "comprador": "Rocio Amarilla",
-      "unidad": "VANTEL Brio 1.8 Comfort 2020",
-      "patente": "AE 283 QF",
-      "precio": 28700,
+      "unidad": "VANTEL Brio 1.8 Comfort 2019",
+      "patente": "AC 468 MH",
+      "precio": 27600,
       "sena": 3000,
       "formaPago": "prendario",
       "estado": "cobrada",
       "vendedor": "Renata Villalba",
-      "comision": 574
+      "comision": 552
     },
     {
       "id": "BOL-2276",
       "fecha": "25/06",
       "comprador": "Julian Recalde",
-      "unidad": "KERO Sable 2.0 4x2 2022",
-      "patente": "AG 175 WQ",
-      "precio": 39500,
+      "unidad": "KERO Sable 2.0 4x2 2021",
+      "patente": "AF 342 GB",
+      "precio": 37900,
       "sena": 5000,
       "formaPago": "contado",
       "estado": "cobrada",
       "vendedor": "Bruno Lattanzio",
-      "comision": 790
+      "comision": 758
     },
     {
       "id": "BOL-2275",
@@ -225,27 +225,27 @@
       "id": "BOL-2274",
       "fecha": "22/06",
       "comprador": "Sebastian Miranda",
-      "unidad": "ZEFIR Cobre E Long Range 2023",
-      "patente": "AH 129 PL",
-      "precio": 37400,
+      "unidad": "ZEFIR Cobre E Long Range 2022",
+      "patente": "AF 894 HY",
+      "precio": 35900,
       "sena": 5000,
       "formaPago": "prendario",
       "estado": "cobrada",
       "vendedor": "Facundo Ibarra",
-      "comision": 748
+      "comision": 718
     },
     {
       "id": "BOL-2273",
       "fecha": "21/06",
       "comprador": "Micaela Bordon",
-      "unidad": "VANTEL Brio 1.8 GLS 2016",
-      "patente": "AA 038 GH",
-      "precio": 13200,
+      "unidad": "VANTEL Brio 1.8 GLS 2015",
+      "patente": "AA 409 EM",
+      "precio": 12700,
       "sena": 1500,
       "formaPago": "contado",
       "estado": "cobrada",
       "vendedor": "Renata Villalba",
-      "comision": 264
+      "comision": 254
     },
     {
       "id": "BOL-2272",
@@ -264,27 +264,27 @@
       "id": "BOL-2271",
       "fecha": "18/06",
       "comprador": "Brenda Sotelo",
-      "unidad": "MARLO Randa Furgón 1.6 2019",
-      "patente": "AC 447 MS",
-      "precio": 18900,
+      "unidad": "MARLO Randa Furgón 1.6 2018",
+      "patente": "AB 334 MF",
+      "precio": 18100,
       "sena": 2000,
       "formaPago": "prendario",
       "estado": "cobrada",
       "vendedor": "Milena Sarti",
-      "comision": 378
+      "comision": 362
     },
     {
       "id": "BOL-2270",
       "fecha": "17/06",
       "comprador": "Ivan Lombardo",
-      "unidad": "NORVIK Talud 4x2 Base 2017",
-      "patente": "AA 519 CG",
-      "precio": 16400,
+      "unidad": "NORVIK Talud 4x2 Base 2016",
+      "patente": "AA 519 WT",
+      "precio": 15700,
       "sena": 1500,
       "formaPago": "contado",
       "estado": "cobrada",
       "vendedor": "Facundo Ibarra",
-      "comision": 328
+      "comision": 314
     },
     {
       "id": "BOL-2269",
@@ -303,20 +303,20 @@
       "id": "BOL-2268",
       "fecha": "13/06",
       "comprador": "Tomas Quiroga",
-      "unidad": "ALVA Nira 1.6 LS 2017",
-      "patente": "AA 271 FJ",
-      "precio": 17900,
+      "unidad": "ALVA Nira 1.6 LS 2016",
+      "patente": "AA 941 VC",
+      "precio": 17200,
       "sena": 1500,
       "formaPago": "contado",
       "estado": "cobrada",
       "vendedor": "Bruno Lattanzio",
-      "comision": 358
+      "comision": 344
     },
     {
       "id": "BOL-2267",
       "fecha": "11/06",
       "comprador": "Victoria Elizalde",
-      "unidad": "TESSARI Lume 2.0 Signature 0km 2026",
+      "unidad": "TESSARI Lume 2.0 Signature Plus 0km 2026",
       "patente": null,
       "precio": 48500,
       "sena": 8000,
@@ -329,14 +329,14 @@
       "id": "BOL-2266",
       "fecha": "09/06",
       "comprador": "Franco Depetris",
-      "unidad": "OSMA Tilo 1.0 Live 2020",
-      "patente": "AE 950 RB",
-      "precio": 27300,
+      "unidad": "OSMA Tilo 1.0 Live 2018",
+      "patente": "AB 150 VP",
+      "precio": 26200,
       "sena": 2500,
       "formaPago": "permuta + saldo",
       "estado": "cobrada",
       "vendedor": "Facundo Ibarra",
-      "comision": 546
+      "comision": 524
     }
   ]
 }

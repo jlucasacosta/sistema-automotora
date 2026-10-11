@@ -51,8 +51,9 @@ export async function getUnidad(id: string): Promise<Unidad | undefined> {
   return unidades().find((u) => u.id === id)
 }
 
-// Solo los usados entran al corredor precio x km: un 0km no tiene mercado de usado.
+// Solo los usados que siguen en la playa entran al corredor precio x km: un 0km no tiene
+// mercado de usado y una unidad vendida ya no se puede repreciar.
 export async function getUsados(): Promise<Unidad[]> {
   await sleep(280)
-  return unidades().filter((u) => u.km > 0)
+  return unidades().filter((u) => u.km > 0 && u.estado !== "vendida")
 }

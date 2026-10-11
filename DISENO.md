@@ -1,5 +1,7 @@
 # Ficha de Diseño — sistema-automotora
 
+> **Ojo: hay una nota fechada 2026-10-11 al final de este documento** (decisión de Lucas: sistemas más profesionales, sin animaciones decorativas). Donde el cuerpo habla de mazo con vuelta 3D, aguja que barre, comparador con rebote o seña que late, vale la nota.
+
 ## Marca
 **VÉRTICE Automotores** (marca ficticia, 100% inventada).
 Voz: playa de venta a las nueve de la noche. La identidad no es el logo: es la **patente stencil + el precio en USD**.
@@ -97,3 +99,31 @@ Test de un segundo: **la patente argentina y el precio en dólares**. Ningún ot
 - vs 05 taller (light/rail/flat/sharp/compact/square): mode, nav, radius, badge, fuentes, color → **6** ✓
 
 **ESQUELETO** — cinco arquetipos nuevos aportados al catálogo (`mosaico-mando`, `embudo-lanes-conversion`, `ficha-flip-deck`, `panel-odometro`, `scatter-precio-km`), muy por encima del mínimo de 2 · combo KPI + gráfico único · estrella (`spec-comparator-drag`) que nadie tiene · eliminado real (feed cronológico) · cero imágenes de producto.
+
+---
+
+## Nota 2026-10-11 · Decisión de Lucas: más profesional, sin decoración animada
+Pidió que los sistemas se vean "más profesionales, como sistemas normales, tipo dashboard-CRM", sin animaciones decorativas, y que se corrija todo lo que dejó la crítica de Impeccable. **La identidad no se rediseña**: paleta, tipografía (Chakra Petch + Figtree), palancas, patente stencil y precio en USD siguen igual. Cambió esto:
+
+**Movimiento.** Sacado: el flip 3D y el "reparto" de la carta del catálogo, el barrido de la aguja del odómetro, el latido de la seña vencida, la entrada con desplazamiento de las fichas del embudo, y en el comparador el rebote del slot, el destello de la celda ganadora y la caída del ribbon. Queda solo lo que provoca el usuario: cambios de color en hover y foco, y una transición corta (200 ms) del ancho de los trapecios al mover una ficha. La seña vencida se distingue por rótulo ("Seña vencida · hace N días"), ícono de alerta, color rojo y borde rojo.
+
+**Catálogo.** El arquetipo `ficha-flip-deck` (mazo con vuelta 3D) se reemplazó por una lista de unidades (buscador, chips de estado, filtros) y una **ficha lateral** por unidad con la patente stencil, el precio en USD gigante, todos los datos técnicos y acciones de demo. La firma visual (patente + USD) se mudó de la carta a la ficha.
+
+**Ficha en ventas y contactos.** Cada boleto y cada contacto abre su ficha con todos los campos y acciones de demo (nada se guarda). Pipeline y mensajes ya eran flujo operativo y no la llevan.
+
+**Estados y color.** Un color por significado, y el rojo reservado para vencido/frío/sobrevaluado:
+| Estado de unidad | Chip |
+|---|---|
+| disponible | success |
+| reservada | warning |
+| señada | primary (igual que la etapa "Seña" del embudo) |
+| en preparación | info |
+| vendida | neutro: texto `fg` sobre `fg/10` (ver excepción) |
+
+El magenta del acento ya no se usa en ningún estado (se parecía al rojo de la seña vencida); queda para el foco, las insignias de mensajes sin leer y el canal "referido". Una seña vigente es un dato en gris (borde neutro), no una alerta: solo "por vencer" (ámbar) y "vencida" (rojo) llaman la atención. Una oportunidad entregada y una unidad vendida no muestran temperatura ni días en stock: muestran "—". Un contacto que ya compró es cliente y tampoco tiene temperatura.
+
+**Excepción de gris para "vendida" (pedida acá, como exige la regla de `CLAUDE.md` §9):** la unidad vendida ya salió de la playa, es un estado neutro por diseño. Cumple las tres condiciones: texto `fg` sobre fondo `fg/10` (más de 10:1), lleva rótulo de texto "vendida" y está pedida en este documento.
+
+**Datos.** Los boletos ahora apuntan a su propia unidad vendida (antes repetían unidades que seguían "disponibles", y dos boletos cobrados compartían patente). El catálogo suma 17 unidades vendidas (47 en total, 18 vendidas con la que ya había). Los diales y el resumen del tablero se calculan desde las demás listas en vez de estar escritos a mano. "Señas activas" pasó a "Señas vigentes" (no contaba la vencida aparte). Dos clientes del embudo se llamaban como vendedores y se renombraron.
+
+**Mobile.** El menú superior tiene degradé en el borde cuando hay más secciones y centra la pestaña activa; el tablero y las listas muestran los indicadores en una fila compacta y el buscador con los chips de estado primero (en el catálogo, el resto de los filtros va en un botón "Filtros (n)"). En mensajes se ve un panel por vez. Todo texto con datos mide 12 px o más (el gráfico de precio × km toma el ancho real de su tarjeta para que sus ejes midan 12 px).

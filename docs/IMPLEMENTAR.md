@@ -4,6 +4,8 @@ Esta guía te lleva del demo (datos de ejemplo, sin backend) a un sistema real p
 
 > **Aclaración importante.** Este repositorio sigue siendo un **demo frontend con datos de ejemplo**. Nada de lo que está acá abajo viene instalado ni conectado: es la receta para que lo construyas **en tu copia**. El código de ejemplo de esta guía no forma parte del repo y no hay ninguna dependencia de Supabase ni de pg-boss en su `package.json`.
 
+> **Cambios del 2026-10-11 sin re-verificar contra Postgres:** diales y resumen (`seniasVigentes`, leads fríos sin clientes, corredor sin vendidas, "Antigüedad promedio"), `getUsados` sin vendidas y el seed con las unidades vendidas. Probalos antes de confiar en ellos.
+
 > **Qué verificamos y qué no.** El SQL de la sección 3 (tablas, vistas, RLS, trigger y el generador de datos) se probó contra un Postgres real con los datos de ejemplo de este repo: las vistas devuelven exactamente lo que esperan los tipos de cada `api.ts`. La sintaxis de `supabase-js`, `@supabase/ssr`, `pg-boss`, OpenAI, Gemini y la configuración de Railway se tomó de su documentación oficial vigente al escribir esto, pero **no la ejecutamos contra cuentas reales**. Si una versión nueva cambia algo, mandan sus docs.
 
 ---
@@ -80,12 +82,12 @@ Cada módulo tiene su `api.ts` (hoy devuelve datos de un JSON; mañana consulta 
 
 | Módulo | Funciones de `api.ts` | `data.json` (clave) | Tabla / vista en la base | Query que reemplaza al JSON |
 |---|---|---|---|---|
-| `catalogo` | `getUnidades()`, `getUnidad(id)`, `getUsados()` (`precioReferencia` y `desvioPct` son cálculo, no tocan la base) | `unidades` | tabla `unidades`, vista `v_unidades` | `from("v_unidades").select("*")` (`getUsados` suma `.gt("km", 0)`) |
+| `catalogo` | `getUnidades()`, `getUnidad(id)`, `getUsados()` (`precioReferencia` y `desvioPct` son cálculo, no tocan la base) | `unidades` | tabla `unidades`, vista `v_unidades` | `from("v_unidades").select("*")` (`getUsados` suma `.gt("km", 0).neq("estado", "vendida")`: un usado ya vendido no entra al corredor de precios) |
 | `contactos` | `getLeads()` | `leads` | tabla `leads`, vista `v_leads` | `from("v_leads").select("*")` |
 | `pipeline` | `getDeals()`, `moverDeal(id, etapa)` | `deals` | tabla `deals`, vista `v_deals` | `from("v_deals").select("*")` y `from("deals").update({ etapa }).eq("id", id)` |
 | `ventas` | `getBoletos()` | `boletos` | tabla `boletos`, vista `v_boletos` | `from("v_boletos").select("*").order("fecha_orden", { ascending: false })` |
 | `conversaciones` | `getHilos()` | `hilos` (con `mensajes` adentro) | tablas `hilos` y `mensajes`, vista `v_hilos` | `from("v_hilos").select("*").order("ultimo_en", { ascending: false })` |
-| `dashboard` | `getDiales()`, `getResumen()` | `diales`, `resumen` | tablas `diales_config` y `ajustes_dominio`, vistas `v_diales` y `v_resumen` | `from("v_diales").select("*").order("orden")` y `from("v_resumen").select("*").single()` |
+| `dashboard` | `getDiales()`, `getResumen()` | `diales` (solo la configuración de cada dial: escala y zona roja; los valores se calculan) | tablas `diales_config` y `ajustes_dominio`, vistas `v_diales` y `v_resumen` | `from("v_diales").select("*").order("orden")` y `from("v_resumen").select("*").single()` |
 | `config` | no tiene `api.ts`: lee `shell/theme.ts` | — | tabla `ajustes_dominio` (los umbrales de `aging`, `lead`, `sena` y `banda`) | cuando quieras que sean editables |
 
 Tres cosas que conviene saber antes de empezar:
@@ -257,7 +259,7 @@ create table public.diales_config (
 );
 insert into public.diales_config (id, orden, label, max, redline_desde, unidad, invertido) values
   ('ventas-mes',     1, 'Ventas del mes',     30, 12, 'u', true),
-  ('aging-promedio', 2, 'Aging promedio',    120, 60, 'd', false),
+  ('aging-promedio', 2, 'Antigüedad promedio', 120, 60, 'd', false),
   ('sobre-corredor', 3, 'Sobre el corredor',  12,  6, 'u', false),
   ('leads-frios',    4, 'Leads fríos',        12,  6, '',  false);
 ```
@@ -372,7 +374,7 @@ left join lateral (
 create view public.v_resumen with (security_invoker = true) as
 select
   coalesce(sum(monto_usd) filter (where etapa <> 'entrega'), 0)::integer                as "valorEmbudo",
-  (count(*) filter (where etapa = 'senia' and sena_vence_el >= current_date))::integer  as "seniasActivas",
+  (count(*) filter (where etapa = 'senia' and sena_vence_el >= current_date))::integer  as "seniasVigentes",
   (count(*) filter (where etapa = 'senia' and sena_vence_el <  current_date))::integer  as "seniasVencidas",
   (count(*) filter (where entregado_el = current_date))::integer                        as "entregasHoy"
 from public.deals;
@@ -392,11 +394,13 @@ cross join lateral (
       from public.unidades u where u.estado <> 'vendida')
     when 'sobre-corredor' then (
       select count(*)::integer from public.unidades u, public.ajustes_dominio a
-      where u.km > 0
+      where u.km > 0 and u.estado <> 'vendida'
         and u.precio_usd / greatest(a.banda_base - a.banda_caida * u.km, a.banda_piso) - 1 >= a.banda_sobre / 100)
     when 'leads-frios' then (
       select count(*)::integer from public.leads l, public.ajustes_dominio a
-      where current_date - l.ultimo_contacto >= a.lead_frio)
+      where current_date - l.ultimo_contacto >= a.lead_frio
+        -- un contacto que ya compró es un cliente: su "días sin contacto" no es una temperatura
+        and not exists (select 1 from public.boletos b where b.comprador = l.nombre and b.estado = 'cobrada'))
   end as valor
 ) calc;
 ```
@@ -713,6 +717,8 @@ export async function getUnidades(): Promise<Unidad[]> {
 }
 ```
 
+Si la consulta falla, lanzá un `Error` (como arriba): las pantallas usan `useCarga` (`shell/carga.tsx`), que lo captura y muestra el aviso con el botón "Reintentar" en vez de dejar la pantalla en cero.
+
 Qué cambió: desapareció el `import raw`, el `sleep` (la latencia ahora es la real) y `structuredClone`; entró la consulta y el manejo de error. Los demás archivos del módulo (`index.tsx`) no se enteran.
 
 El mismo patrón para el resto de `catalogo/api.ts`:
@@ -727,7 +733,7 @@ export async function getUnidad(id: string): Promise<Unidad | undefined> {
 
 export async function getUsados(): Promise<Unidad[]> {
   const supabase = createClient()
-  const { data, error } = await supabase.from("v_unidades").select("*").gt("km", 0).order("id")
+  const { data, error } = await supabase.from("v_unidades").select("*").gt("km", 0).neq("estado", "vendida").order("id")
   if (error) throw new Error(`No se pudieron cargar los usados: ${error.message}`)
   return data as Unidad[]
 }
@@ -869,6 +875,7 @@ await boss.work("leads-frios", async ([job]) => {
     .from("leads")
     .select("id, nombre, vendedor_id")
     .lte("ultimo_contacto", limite.toISOString().slice(0, 10))
+    // (en producción, excluí también a quienes ya compraron: boleto cobrado = cliente, no lead frío)
   if (error) throw error // pg-boss reintenta segun la configuracion del trabajo
   console.log(`Trabajo ${job.id}: ${data.length} leads frios`)
   // Aca va el aviso a cada vendedor (email, WhatsApp, lo que uses).

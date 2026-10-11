@@ -2,12 +2,12 @@
 // No es "anillos cortado a la mitad": lo que lo define es la AGUJA y la ZONA REDLINE.
 // Un anillo dice "cuanto llevo". Un dial de tablero dice "a que ritmo voy y donde
 // empieza el peligro". Por eso hay aguja, y por eso hay redline.
-// La aguja barre desde cero al montar (animacion `aguja` en globals.css).
+// Estatico: la aguja apunta al valor sin barrido (decision de Lucas, 2026-10-11: sin animaciones decorativas).
 
 export type Dial = {
   id: string
   label: string
-  valor: number
+  valor: number | null // null mientras carga: se muestra "—", nunca un 0 falso
   max: number
   redlineDesde: number // el limite de la zona roja
   unidad: string
@@ -44,10 +44,12 @@ const textoValor: Record<"normal" | "redline", string> = {
 }
 
 export function Odometro({ d }: { d: Dial }) {
-  const frac = Math.max(0, Math.min(d.valor / d.max, 1))
+  const valor = d.valor ?? 0
+  const frac = Math.max(0, Math.min(valor / d.max, 1))
   const fracRedline = Math.max(0, Math.min(d.redlineDesde / d.max, 1))
-  const enRedline = d.invertido ? frac <= fracRedline : frac >= fracRedline
+  const enRedline = d.valor !== null && (d.invertido ? frac <= fracRedline : frac >= fracRedline)
   const estado = enRedline ? "redline" : "normal"
+  const sufijo = d.unidad ? " " + d.unidad : ""
   const grados = (frac - 0.5) * 180
   // La zona roja se dibuja en su propio radio, fuera de la pista: si viviera sobre la
   // pista, el arco de valor la taparia cuando la aguja la cruza. Eso pasaba en los
@@ -58,7 +60,8 @@ export function Odometro({ d }: { d: Dial }) {
 
   return (
     <div className="flex flex-col items-center">
-      <svg viewBox="0 0 120 70" className="w-full max-w-[9rem]" aria-hidden="true" focusable="false">
+      {/* El arco es solo para escritorio: en celular los indicadores van en una fila compacta de cifras. */}
+      <svg viewBox="0 0 120 70" className="hidden w-full max-w-[9rem] md:block" aria-hidden="true" focusable="false">
         {/* pista */}
         <path d={arco(0, 1)} className="stroke-border" strokeWidth={7} fill="none" strokeLinecap="round" />
         {/* recorrido real */}
@@ -73,26 +76,32 @@ export function Odometro({ d }: { d: Dial }) {
             Va afuera y ultima, asi ningun arco de valor puede taparla. */}
         <path d={zonaRoja} className="stroke-danger/80" strokeWidth={3.5} fill="none" strokeLinecap="round" />
         {/* la aguja: esto es lo que lo hace un tablero y no un anillo */}
-        <g className="aguja" style={{ transform: `rotate(${grados}deg)`, transformOrigin: `${CX}px ${CY}px` }}>
+        <g style={{ transform: `rotate(${grados}deg)`, transformOrigin: `${CX}px ${CY}px` }}>
           <line x1={CX} y1={CY} x2={CX} y2={CY - R + 6} className="stroke-fg" strokeWidth={2} strokeLinecap="round" />
           <circle cx={CX} cy={CY - R + 8} r={2.5} className="fill-accent" />
         </g>
         <circle cx={CX} cy={CY} r={5} className="fill-surface stroke-border" strokeWidth={1.5} />
       </svg>
 
-      <p className={"precio -mt-3 text-2xl leading-none " + textoValor[estado]}>
-        {d.valor.toLocaleString("es-AR")}
-        <span className="ml-1 text-[0.6rem] font-normal text-muted">{d.unidad}</span>
+      <p className={"precio text-2xl leading-none md:-mt-3 " + textoValor[estado]}>
+        {d.valor === null ? "—" : d.valor.toLocaleString("es-AR")}
+        <span className="ml-1 text-xs font-normal text-muted">{d.unidad}</span>
         {enRedline && <span className="sr-only"> (en zona roja)</span>}
       </p>
-      <p className="mt-1 text-center text-[0.625rem] uppercase tracking-widest text-muted">{d.label}</p>
+      <p className="mt-1 text-center text-xs uppercase tracking-wider text-muted">{d.label}</p>
+      {/* Leyenda inline: el rango de la escala y donde empieza la zona roja. */}
+      <p className="dato text-center text-xs text-muted">
+        de {d.max.toLocaleString("es-AR")}
+        {sufijo} · zona roja {d.invertido ? "hasta" : "desde"} {d.redlineDesde.toLocaleString("es-AR")}
+        {sufijo}
+      </p>
     </div>
   )
 }
 
 export function PanelOdometro({ diales }: { diales: Dial[] }) {
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-x-3 gap-y-4 lg:grid-cols-4">
       {diales.map((d) => (
         <Odometro key={d.id} d={d} />
       ))}

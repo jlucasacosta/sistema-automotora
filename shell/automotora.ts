@@ -48,6 +48,12 @@ export const textoLead: Record<NivelLead, string> = {
   tibio: "text-warning",
   frio: "text-danger",
 }
+// El color nunca va solo: el rotulo de texto acompana a la temperatura.
+export const rotuloLead: Record<NivelLead, string> = {
+  activo: "activo",
+  tibio: "tibio",
+  frio: "frío",
+}
 
 // --- La seña: dias que le quedan a la reserva. Negativo = vencida. ---
 export type NivelSena = "vigente" | "por-vencer" | "vencida"
@@ -58,21 +64,36 @@ export function nivelDeSena(diasRestantes: number): NivelSena {
   return "vigente"
 }
 
+// Solo la que vence pronto o ya vencio pide atencion: una seña vigente es un dato, no una alerta.
 export const bordeSena: Record<NivelSena, string> = {
-  vigente: "border-l-success",
+  vigente: "border-l-border",
   "por-vencer": "border-l-warning",
   vencida: "border-l-danger",
+}
+export const textoSena: Record<NivelSena, string> = {
+  vigente: "text-muted",
+  "por-vencer": "text-warning",
+  vencida: "text-danger",
+}
+export const rotuloSena: Record<NivelSena, string> = {
+  vigente: "Seña vigente",
+  "por-vencer": "Seña por vencer",
+  vencida: "Seña vencida",
 }
 
 // --- Estado de la unidad ---
 export type EstadoUnidad = "disponible" | "reservada" | "seniada" | "en preparacion" | "vendida"
 
+// Un color por significado: disponible = verde, reservada = ambar, señada = violeta (la misma
+// que la etapa "Seña" del embudo), en preparacion = celeste. "vendida" es neutra por diseño
+// (la unidad ya salio de la playa; excepcion documentada en DISENO.md): texto fg sobre fondo
+// tenue, con rotulo. El magenta del acento y el rojo quedan fuera de los estados de unidad.
 export const chipUnidad: Record<EstadoUnidad, string> = {
-  disponible: "bg-primary/20 text-fg",
+  disponible: "bg-success/15 text-success",
   reservada: "bg-warning/15 text-warning",
-  seniada: "bg-accent/10 text-accent",
+  seniada: "bg-primary/20 text-fg",
   "en preparacion": "bg-info/15 text-info",
-  vendida: "bg-success/15 text-success",
+  vendida: "bg-fg/10 text-fg",
 }
 
 // --- Rotulos de display (con tildes) para valores que el codigo compara sin tildes. ---
@@ -133,7 +154,7 @@ export const rellenoEtapa: Record<Etapa, string> = {
   contactado: "bg-info",
   "test drive": "bg-primary",
   cotizacion: "bg-primary",
-  senia: "bg-accent",
+  senia: "bg-primary",
   entrega: "bg-success",
 }
 // El trapecio se tinta suave; el rotulo va encima en fg. Clases LITERALES: Tailwind
@@ -141,9 +162,9 @@ export const rellenoEtapa: Record<Etapa, string> = {
 export const rellenoEtapaSuave: Record<Etapa, string> = {
   consulta: "bg-info/20",
   contactado: "bg-info/30",
-  "test drive": "bg-primary/30",
-  cotizacion: "bg-primary/45",
-  senia: "bg-accent/35",
+  "test drive": "bg-primary/25",
+  cotizacion: "bg-primary/40",
+  senia: "bg-primary/55",
   entrega: "bg-success/40",
 }
 export const chipEtapa: Record<Etapa, string> = {
@@ -151,7 +172,7 @@ export const chipEtapa: Record<Etapa, string> = {
   contactado: "bg-info/15 text-info",
   "test drive": "bg-primary/20 text-fg",
   cotizacion: "bg-primary/20 text-fg",
-  senia: "bg-accent/10 text-accent",
+  senia: "bg-primary/20 text-fg",
   entrega: "bg-success/15 text-success",
 }
 

@@ -7,7 +7,7 @@
 // Se arrastran hasta 3 unidades a los slots. Cada fila de spec resalta la celda
 // ganadora en success y muestra el delta contra la mejor. La columna que gana mas
 // filas recibe el ribbon "MEJOR VALOR". Ningun otro sistema tiene drag-to-compare.
-import { useEffect, useState, type KeyboardEvent } from "react"
+import { useState, type KeyboardEvent } from "react"
 import { Trophy, X } from "lucide-react"
 import { usd, ars, rotuloCaja, km as fmtKm } from "./automotora"
 
@@ -66,14 +66,6 @@ const SLOTS = 3
 export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
   const [slots, setSlots] = useState<(UnidadComparable | null)[]>([null, null, null])
   const [sobre, setSobre] = useState<number | null>(null)
-  const [pulso, setPulso] = useState(0) // se incrementa en cada cambio: reinicia el flash
-  const [snap, setSnap] = useState<number | null>(null)
-
-  useEffect(() => {
-    if (snap === null) return
-    const t = setTimeout(() => setSnap(null), 360)
-    return () => clearTimeout(t)
-  }, [snap])
 
   const cargados = slots.filter(Boolean) as UnidadComparable[]
 
@@ -81,8 +73,6 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
     const u = unidades.find((x) => x.id === id)
     if (!u || slots.some((s) => s?.id === id)) return
     setSlots((s) => s.map((v, j) => (j === i ? u : v)))
-    setSnap(i)
-    setPulso((p) => p + 1)
   }
 
   // Alternativa al arrastre (WCAG 2.5.7): click o Enter sobre la unidad la manda al primer slot libre.
@@ -99,7 +89,6 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
 
   const sacar = (i: number) => {
     setSlots((s) => s.map((v, j) => (j === i ? null : v)))
-    setPulso((p) => p + 1)
   }
 
   // Ganadora por fila: solo si hay 2+ unidades cargadas y la fila tiene criterio.
@@ -133,8 +122,8 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
     <div className="grid gap-3 lg:grid-cols-[16rem_1fr]">
       {/* Mazo de candidatas: se arrastran a los slots */}
       <div className="surface-card flex flex-col p-3">
-        <h3 className="font-heading text-[0.6875rem] font-bold uppercase tracking-widest text-muted">Unidades para comparar</h3>
-        <p className="mb-2 mt-1 text-[0.625rem] leading-snug text-muted">
+        <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-muted">Unidades para comparar</h3>
+        <p className="mb-2 mt-1 text-xs leading-snug text-muted">
           Arrastrá hasta 3 unidades a la bandeja, o hacé click en una para sumarla.
         </p>
         <ul tabIndex={0} aria-label="Unidades para comparar" className="max-h-[19rem] space-y-1.5 overflow-y-auto pr-1">
@@ -153,7 +142,7 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
               <p className="truncate font-heading text-xs font-semibold">
                 {u.marca} {u.modelo}
               </p>
-              <p className="dato mt-0.5 flex items-center justify-between text-[0.625rem] text-muted">
+              <p className="dato mt-0.5 flex items-center justify-between text-xs text-muted">
                 <span>
                   {u.anio} · {fmtKm(u.km)}
                 </span>
@@ -162,7 +151,7 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
             </div>
             </li>
           ))}
-          {!disponibles.length && <li className="py-6 text-center text-[0.625rem] text-muted">Sin unidades disponibles</li>}
+          {!disponibles.length && <li className="py-6 text-center text-xs text-muted">Sin unidades disponibles</li>}
         </ul>
       </div>
 
@@ -172,7 +161,7 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
         <div role="table" aria-label="Comparador de unidades" className="min-w-[34rem]">
         <div role="row" className="grid grid-cols-[9rem_repeat(3,1fr)] border-b border-border">
           <div role="columnheader" className="flex items-end p-3">
-            <h3 className="font-heading text-[0.6875rem] font-bold uppercase tracking-widest text-muted">Comparador</h3>
+            <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-muted">Comparador</h3>
           </div>
           {slots.map((u, i) => (
             <div
@@ -189,16 +178,11 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
                 soltar(i, e.dataTransfer.getData("text/plain"))
               }}
               className={
-                "relative border-l border-border p-3 transition-colors " +
-                (sobre === i ? "bg-primary/15" : "") +
-                (snap === i ? " snap" : "")
+                "relative border-l border-border p-3 transition-colors " + (sobre === i ? "bg-primary/15" : "")
               }
             >
               {mejorValor === i && (
-                <span
-                  key={pulso}
-                  className="ribbon absolute right-2 top-0 flex items-center gap-1 rounded-b bg-success px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-widest text-bg"
-                >
+                <span className="absolute right-2 top-0 flex items-center gap-1 rounded-b bg-success px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-bg">
                   <Trophy size={10} strokeWidth={2.5} /> Mejor valor
                 </span>
               )}
@@ -215,13 +199,13 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
                   <p className="truncate font-heading text-sm font-bold">
                     {u.marca} {u.modelo}
                   </p>
-                  <p className="truncate text-[0.625rem] text-muted">{u.version}</p>
-                  <p className="patente mt-1.5 inline-block rounded bg-subtle px-1.5 py-0.5 text-[0.625rem]">
+                  <p className="truncate text-xs text-muted">{u.version}</p>
+                  <p className="patente mt-1.5 inline-block rounded bg-subtle px-1.5 py-0.5 text-xs">
                     {u.patente ?? "SIN PATENTAR"}
                   </p>
                 </div>
               ) : (
-                <div className="flex h-24 items-center justify-center rounded border border-dashed border-border text-[0.625rem] uppercase tracking-widest text-muted">
+                <div className="flex h-24 items-center justify-center rounded border border-dashed border-border text-xs uppercase tracking-wider text-muted">
                   Slot {i + 1}
                 </div>
               )}
@@ -235,7 +219,7 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
               const g = ganadoraDe(f)
               return (
                 <div key={f.key} role="row" className="grid grid-cols-[9rem_repeat(3,1fr)] border-b border-border last:border-0">
-                  <div role="rowheader" className="px-3 py-2 text-[0.6875rem] text-muted">{f.label}</div>
+                  <div role="rowheader" className="px-3 py-2 text-xs text-muted">{f.label}</div>
                   {slots.map((u, i) => {
                     if (!u) return <div key={i} role="cell" className="border-l border-border px-3 py-2" />
                     const v = f.valor(u)
@@ -250,12 +234,12 @@ export function Comparador({ unidades }: { unidades: UnidadComparable[] }) {
                           (gana ? "text-success" : pierde ? "text-muted" : "text-fg")
                         }
                       >
-                        <span key={pulso} className={"dato inline-block rounded px-1 text-xs " + (gana ? "ganadora-flash bg-success/10" : "")}>
+                        <span className={"dato inline-block rounded px-1 text-xs " + (gana ? "bg-success/10" : "")}>
                           {f.texto(u)}
                           {gana && <span className="sr-only"> (mejor de la fila)</span>}
                         </span>
                         {pierde && f.delta && v !== null && g !== null && (
-                          <span className="ml-1 text-[0.625rem] text-danger">{f.delta(v, g)}</span>
+                          <span className="ml-1 text-xs text-danger">{f.delta(v, g)}</span>
                         )}
                       </div>
                     )

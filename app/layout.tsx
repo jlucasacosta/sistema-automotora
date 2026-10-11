@@ -89,7 +89,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </a>
         <div className={"min-h-screen bg-bg text-fg " + (stacked ? "flex flex-col" : "flex")}>
           <Nav />
-          <main id="contenido" tabIndex={-1} className="flex-1 overflow-x-hidden p-[var(--pad)] focus:outline-none">{children}</main>
+          <main id="contenido" tabIndex={-1} className="relative min-w-0 flex-1 overflow-x-hidden p-[var(--pad)] focus:outline-none">{children}</main>
         </div>
       </body>
     </html>

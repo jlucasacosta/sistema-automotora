@@ -78,7 +78,9 @@ export function FichaLateral({ abierta, titulo, subtitulo, onCerrar, children, a
   if (!abierta) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-end lg:items-stretch">
+    // `!m-0`: si la ficha es hermana de un bloque dentro de un `space-y-*`, ese margen superior corrió el panel
+    // fijo 2rem hacia abajo y dejó una franja sin cubrir arriba.
+    <div className="fixed inset-0 z-50 !m-0 flex items-end justify-end lg:items-stretch">
       <div className="absolute inset-0 bg-fg/40" aria-hidden="true" onClick={onCerrar} />
       <div
         ref={panel}

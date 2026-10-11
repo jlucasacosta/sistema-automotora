@@ -599,7 +599,7 @@ node generar-seed.mjs > seed.sql
 
 Abrí `seed.sql`, copiá todo, pegalo en **SQL Editor → New query** y ejecutalo. El SQL Editor corre con un rol administrador, así que no le molesta el RLS.
 
-Qué hace el generador: convierte `diasPlaya`, `diasSinContacto` y `senaDias` en fechas relativas a hoy, crea los vendedores a partir de los nombres, y crea el contacto de las dos oportunidades cuyo cliente no estaba en la lista de contactos. Los números de "Resumen" del `data.json` eran fijos; con la base se calculan de las fichas reales, por eso pueden dar distinto. "Ventas del mes" cuenta los boletos del mes en curso y los de ejemplo tienen fecha de julio.
+Qué hace el generador: convierte `diasPlaya`, `diasSinContacto` y `senaDias` en fechas relativas a hoy, crea los vendedores a partir de los nombres, y crea el contacto de las dos oportunidades cuyo cliente no estaba en la lista de contactos. Los números de "Resumen" del `data.json` eran fijos; con la base se calculan de las fichas reales, por eso pueden dar distinto. "Ventas del mes" cuenta los boletos cobrados del mes en curso y los de ejemplo tienen fecha de junio y julio: el demo del frontend cuenta todos los cobrados (17), la base da 0 hasta que haya boletos de este mes.
 
 > **Alternativa sin script:** en **Table Editor → tabla → Import data from CSV** podés subir un CSV por tabla. Los encabezados tienen que coincidir con los nombres de **columna** de la tabla (`precio_usd`, no `precio`), y tenés que cargar las tablas en este orden: `vendedores`, `unidades`, `leads`, `deals`, `boletos`, `hilos`, `mensajes`. Para el demo completo es bastante más trabajo que el script.
 
